@@ -375,6 +375,25 @@
 
 
     /*
+     * Maksimal pengecekan otomatis:
+     *
+     * 12 kali × 5 detik
+     * = sekitar 60 detik
+     */
+
+    let checkAttempt = 0;
+
+    const MAX_CHECK_ATTEMPTS =
+      12;
+
+    const CHECK_INTERVAL =
+      5000;
+
+    let autoCheckTimer =
+      null;
+
+
+    /*
      * ==========================================
      * ELEMENT
      * ==========================================
@@ -457,6 +476,8 @@
      */
 
     function checkStatus() {
+
+      clearAutoCheckTimer();
 
       setChecking();
 
@@ -568,12 +589,20 @@
 
 
       /*
+       * ========================================
        * SUCCESS
+       * ========================================
        */
 
       if (
         status === 'SUCCESS'
       ) {
+
+        clearAutoCheckTimer();
+
+        checkAttempt =
+          0;
+
 
         statusIcon.className =
           'icon success';
@@ -581,21 +610,27 @@
         statusIcon.textContent =
           '✓';
 
+
         title.textContent =
           'Pembayaran Berhasil';
+
 
         description.textContent =
           'Pembayaran telah dikonfirmasi oleh DOKU.';
 
+
         retryButton.style.display =
           'none';
+
 
         return;
       }
 
 
       /*
+       * ========================================
        * PENDING
+       * ========================================
        */
 
       if (
@@ -608,21 +643,70 @@
         statusIcon.textContent =
           '⌛';
 
+
         title.textContent =
-          'Pembayaran Diproses';
+          'Menunggu Konfirmasi Pembayaran';
 
-        description.textContent =
-          'Pembayaran belum terkonfirmasi. Jika baru saja membayar, tunggu sebentar lalu periksa kembali.';
 
-        retryButton.style.display =
-          'block';
+        statusElement.textContent =
+          'PENDING';
+
+
+        checkAttempt++;
+
+
+        /*
+         * Belum mencapai batas.
+         * Cek lagi otomatis.
+         */
+
+        if (
+          checkAttempt <
+          MAX_CHECK_ATTEMPTS
+        ) {
+
+          description.textContent =
+            'Pembayaran sedang dikonfirmasi oleh DOKU. Status akan diperiksa kembali secara otomatis.';
+
+
+          retryButton.style.display =
+            'none';
+
+
+          autoCheckTimer =
+            setTimeout(
+              function () {
+
+                checkStatus();
+
+              },
+              CHECK_INTERVAL
+            );
+
+        } else {
+
+          /*
+           * Sudah sekitar 60 detik.
+           * Hentikan pengecekan otomatis.
+           */
+
+          description.textContent =
+            'Pembayaran belum terkonfirmasi. Silakan periksa kembali status pembayaran.';
+
+
+          retryButton.style.display =
+            'block';
+        }
+
 
         return;
       }
 
 
       /*
+       * ========================================
        * FAILED / EXPIRED / CANCELLED
+       * ========================================
        */
 
       if (
@@ -631,28 +715,40 @@
         status === 'CANCELLED'
       ) {
 
+        clearAutoCheckTimer();
+
+
         statusIcon.className =
           'icon failed';
 
         statusIcon.textContent =
           '×';
 
+
         title.textContent =
           'Pembayaran Tidak Berhasil';
+
 
         description.textContent =
           'Transaksi tidak berhasil atau sudah tidak dapat digunakan.';
 
+
         retryButton.style.display =
           'none';
+
 
         return;
       }
 
 
       /*
+       * ========================================
        * STATUS LAIN
+       * ========================================
        */
+
+      clearAutoCheckTimer();
+
 
       statusIcon.className =
         'icon pending';
@@ -660,12 +756,15 @@
       statusIcon.textContent =
         '?';
 
+
       title.textContent =
         'Status Pembayaran';
+
 
       description.textContent =
         'Status transaksi saat ini: ' +
         status;
+
 
       retryButton.style.display =
         'block';
@@ -686,14 +785,18 @@
       statusIcon.textContent =
         '...';
 
+
       title.textContent =
         'Memeriksa Pembayaran';
+
 
       description.textContent =
         'Mohon tunggu. Kami sedang memeriksa status transaksi ke DOKU.';
 
+
       statusElement.textContent =
         'Memeriksa...';
+
 
       retryButton.style.display =
         'none';
@@ -711,20 +814,27 @@
       message
     ) {
 
+      clearAutoCheckTimer();
+
+
       statusIcon.className =
         'icon failed';
 
       statusIcon.textContent =
         '!';
 
+
       title.textContent =
         heading;
+
 
       description.textContent =
         message;
 
+
       statusElement.textContent =
         'ERROR';
+
 
       retryButton.style.display =
         'block';
@@ -765,6 +875,28 @@
 
     /*
      * ==========================================
+     * CLEAR TIMER
+     * ==========================================
+     */
+
+    function clearAutoCheckTimer() {
+
+      if (
+        autoCheckTimer
+      ) {
+
+        clearTimeout(
+          autoCheckTimer
+        );
+
+        autoCheckTimer =
+          null;
+      }
+    }
+
+
+    /*
+     * ==========================================
      * RETRY BUTTON
      * ==========================================
      */
@@ -772,6 +904,14 @@
     retryButton.addEventListener(
       'click',
       function () {
+
+        /*
+         * Mulai lagi siklus pengecekan
+         * otomatis dari awal.
+         */
+
+        checkAttempt =
+          0;
 
         checkStatus();
 
