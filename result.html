@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Status Pembayaran</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      background:
+        #f4f6f8;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+
+      padding: 30px;
+
+      background:
+        #ffffff;
+
+      border-radius:
+        20px;
+
+      box-shadow:
+        0 10px 35px
+        rgba(0, 0, 0, 0.08);
+
+      text-align:
+        center;
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+
+      margin:
+        0 auto 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius:
+        50%;
+
+      font-size:
+        34px;
+
+      font-weight:
+        bold;
+
+      background:
+        #edf2f7;
+
+      color:
+        #667085;
+    }
+
+    .icon.success {
+      background:
+        #eaf8ef;
+
+      color:
+        #18864b;
+    }
+
+    .icon.pending {
+      background:
+        #fff6e5;
+
+      color:
+        #b56c00;
+    }
+
+    .icon.failed {
+      background:
+        #fff0f0;
+
+      color:
+        #b42318;
+    }
+
+    h1 {
+      margin:
+        0 0 10px;
+
+      font-size:
+        24px;
+
+      color:
+        #1d232d;
+    }
+
+    .description {
+      margin:
+        0 auto 24px;
+
+      color:
+        #69717d;
+
+      font-size:
+        14px;
+
+      line-height:
+        1.6;
+    }
+
+    .detail {
+      padding:
+        16px;
+
+      margin-bottom:
+        22px;
+
+      background:
+        #f7f8fa;
+
+      border-radius:
+        12px;
+
+      text-align:
+        left;
+    }
+
+    .detail-row {
+      margin-bottom:
+        12px;
+    }
+
+    .detail-row:last-child {
+      margin-bottom:
+        0;
+    }
+
+    .label {
+      display:
+        block;
+
+      margin-bottom:
+        4px;
+
+      color:
+        #8a919c;
+
+      font-size:
+        11px;
+
+      font-weight:
+        bold;
+
+      text-transform:
+        uppercase;
+    }
+
+    .value {
+      display:
+        block;
+
+      color:
+        #252a31;
+
+      font-size:
+        14px;
+
+      font-weight:
+        bold;
+
+      word-break:
+        break-word;
+    }
+
+    .button {
+      display:
+        block;
+
+      width:
+        100%;
+
+      padding:
+        14px 16px;
+
+      border:
+        none;
+
+      border-radius:
+        12px;
+
+      background:
+        #191d23;
+
+      color:
+        #ffffff;
+
+      font-size:
+        14px;
+
+      font-weight:
+        bold;
+
+      text-decoration:
+        none;
+
+      cursor:
+        pointer;
+    }
+
+    .retry {
+      display:
+        none;
+
+      width:
+        100%;
+
+      margin-top:
+        10px;
+
+      padding:
+        13px;
+
+      border:
+        1px solid #d7dce3;
+
+      border-radius:
+        12px;
+
+      background:
+        #ffffff;
+
+      color:
+        #292d33;
+
+      font-size:
+        14px;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+    }
+
+    .footer {
+      margin-top:
+        20px;
+
+      color:
+        #9aa0a9;
+
+      font-size:
+        11px;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="card">
+
+    <div
+      id="statusIcon"
+      class="icon"
+    >
+      ...
+    </div>
+
+
+    <h1 id="title">
+      Memeriksa Pembayaran
+    </h1>
+
+
+    <p
+      id="description"
+      class="description"
+    >
+      Mohon tunggu.
+      Kami sedang memeriksa status transaksi ke DOKU.
+    </p>
+
+
+    <div class="detail">
+
+      <div class="detail-row">
+
+        <span class="label">
+          Invoice
+        </span>
+
+        <span
+          id="invoice"
+          class="value"
+        >
+          -
+        </span>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <span class="label">
+          Status
+        </span>
+
+        <span
+          id="paymentStatus"
+          class="value"
+        >
+          Memeriksa...
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <a
+      class="button"
+      href="./"
+    >
+      Kembali ke Pembayaran
+    </a>
+
+
+    <button
+      id="retryButton"
+      class="retry"
+      type="button"
+    >
+      Periksa Status Lagi
+    </button>
+
+
+    <div class="footer">
+      DOKU Sandbox • Payment Test
+    </div>
+
+  </main>
+
+
+  <script>
+
+    /*
+     * ==========================================
+     * CONFIG
+     * ==========================================
+     */
+
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+
+
+    /*
+     * ==========================================
+     * ELEMENT
+     * ==========================================
+     */
+
+    const statusIcon =
+      document.getElementById(
+        'statusIcon'
+      );
+
+    const title =
+      document.getElementById(
+        'title'
+      );
+
+    const description =
+      document.getElementById(
+        'description'
+      );
+
+    const invoiceElement =
+      document.getElementById(
+        'invoice'
+      );
+
+    const statusElement =
+      document.getElementById(
+        'paymentStatus'
+      );
+
+    const retryButton =
+      document.getElementById(
+        'retryButton'
+      );
+
+
+    /*
+     * ==========================================
+     * AMBIL INVOICE DARI URL
+     * ==========================================
+     */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const invoice =
+      params.get(
+        'invoice'
+      );
+
+
+    /*
+     * ==========================================
+     * INIT
+     * ==========================================
+     */
+
+    if (!invoice) {
+
+      showError(
+        'Invoice tidak ditemukan.',
+        'URL pembayaran tidak memiliki invoice number.'
+      );
+
+    } else {
+
+      invoiceElement.textContent =
+        invoice;
+
+      checkStatus();
+    }
+
+
+    /*
+     * ==========================================
+     * CHECK STATUS
+     * ==========================================
+     */
+
+    function checkStatus() {
+
+      setChecking();
+
+
+      const callbackName =
+        'dokuStatusCallback_' +
+        Date.now();
+
+
+      window[callbackName] =
+        function (response) {
+
+          cleanup(
+            callbackName
+          );
+
+
+          if (
+            !response ||
+            response.success !== true
+          ) {
+
+            showError(
+              'Gagal Memeriksa Pembayaran',
+              response?.message ||
+              'Status pembayaran tidak dapat diperiksa.'
+            );
+
+            return;
+          }
+
+
+          const status =
+            String(
+              response?.data?.status ||
+              'UNKNOWN'
+            ).toUpperCase();
+
+
+          renderStatus(
+            status
+          );
+        };
+
+
+      const url =
+
+        API_URL +
+
+        '?action=checkStatus' +
+
+        '&invoice=' +
+        encodeURIComponent(
+          invoice
+        ) +
+
+        '&callback=' +
+        encodeURIComponent(
+          callbackName
+        );
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      script.id =
+        callbackName;
+
+
+      script.src =
+        url;
+
+
+      script.onerror =
+        function () {
+
+          cleanup(
+            callbackName
+          );
+
+          showError(
+            'Server Tidak Terhubung',
+            'Tidak dapat menghubungi server pembayaran.'
+          );
+        };
+
+
+      document.body.appendChild(
+        script
+      );
+    }
+
+
+    /*
+     * ==========================================
+     * RENDER STATUS
+     * ==========================================
+     */
+
+    function renderStatus(
+      status
+    ) {
+
+      statusElement.textContent =
+        status;
+
+
+      /*
+       * SUCCESS
+       */
+
+      if (
+        status === 'SUCCESS'
+      ) {
+
+        statusIcon.className =
+          'icon success';
+
+        statusIcon.textContent =
+          '✓';
+
+        title.textContent =
+          'Pembayaran Berhasil';
+
+        description.textContent =
+          'Pembayaran telah dikonfirmasi oleh DOKU.';
+
+        retryButton.style.display =
+          'none';
+
+        return;
+      }
+
+
+      /*
+       * PENDING
+       */
+
+      if (
+        status === 'PENDING'
+      ) {
+
+        statusIcon.className =
+          'icon pending';
+
+        statusIcon.textContent =
+          '⌛';
+
+        title.textContent =
+          'Pembayaran Diproses';
+
+        description.textContent =
+          'Pembayaran belum terkonfirmasi. Jika baru saja membayar, tunggu sebentar lalu periksa kembali.';
+
+        retryButton.style.display =
+          'block';
+
+        return;
+      }
+
+
+      /*
+       * FAILED / EXPIRED / CANCELLED
+       */
+
+      if (
+        status === 'FAILED' ||
+        status === 'EXPIRED' ||
+        status === 'CANCELLED'
+      ) {
+
+        statusIcon.className =
+          'icon failed';
+
+        statusIcon.textContent =
+          '×';
+
+        title.textContent =
+          'Pembayaran Tidak Berhasil';
+
+        description.textContent =
+          'Transaksi tidak berhasil atau sudah tidak dapat digunakan.';
+
+        retryButton.style.display =
+          'none';
+
+        return;
+      }
+
+
+      /*
+       * STATUS LAIN
+       */
+
+      statusIcon.className =
+        'icon pending';
+
+      statusIcon.textContent =
+        '?';
+
+      title.textContent =
+        'Status Pembayaran';
+
+      description.textContent =
+        'Status transaksi saat ini: ' +
+        status;
+
+      retryButton.style.display =
+        'block';
+    }
+
+
+    /*
+     * ==========================================
+     * CHECKING UI
+     * ==========================================
+     */
+
+    function setChecking() {
+
+      statusIcon.className =
+        'icon';
+
+      statusIcon.textContent =
+        '...';
+
+      title.textContent =
+        'Memeriksa Pembayaran';
+
+      description.textContent =
+        'Mohon tunggu. Kami sedang memeriksa status transaksi ke DOKU.';
+
+      statusElement.textContent =
+        'Memeriksa...';
+
+      retryButton.style.display =
+        'none';
+    }
+
+
+    /*
+     * ==========================================
+     * ERROR
+     * ==========================================
+     */
+
+    function showError(
+      heading,
+      message
+    ) {
+
+      statusIcon.className =
+        'icon failed';
+
+      statusIcon.textContent =
+        '!';
+
+      title.textContent =
+        heading;
+
+      description.textContent =
+        message;
+
+      statusElement.textContent =
+        'ERROR';
+
+      retryButton.style.display =
+        'block';
+    }
+
+
+    /*
+     * ==========================================
+     * CLEANUP JSONP
+     * ==========================================
+     */
+
+    function cleanup(
+      callbackName
+    ) {
+
+      const script =
+        document.getElementById(
+          callbackName
+        );
+
+
+      if (script) {
+        script.remove();
+      }
+
+
+      try {
+
+        delete window[
+          callbackName
+        ];
+
+      } catch (err) {}
+
+    }
+
+
+    /*
+     * ==========================================
+     * RETRY BUTTON
+     * ==========================================
+     */
+
+    retryButton.addEventListener(
+      'click',
+      function () {
+
+        checkStatus();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
