@@ -38,11 +38,24 @@
     const paymentStatus=document.getElementById('paymentStatus');
     const payButton=document.getElementById('payButton');
     const statusBox=document.getElementById('statusBox');
-    const params=new URLSearchParams(window.location.search);
-    const paymentToken=String(params.get('token')||'').trim();
+    const TOKEN_STORAGE_KEY='doku_secure_payment_token';
+    const queryParams=new URLSearchParams(window.location.search);
+    const hashParams=new URLSearchParams(window.location.hash?window.location.hash.substring(1):'');
+    const tokenFromUrl=String(hashParams.get('token')||queryParams.get('token')||'').trim();
+
+    if(tokenFromUrl){
+      try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}
+      try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}
+    }
+
+    let storedToken='';
+    try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
+
+    const paymentToken=String(tokenFromUrl||storedToken||'').trim();
     let currentPayment=null;
 
     if(!paymentToken){showError('Payment token tidak ditemukan. Gunakan link pembayaran yang valid.');}
+    else if(!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Link pembayaran tidak valid atau sudah tidak tersedia.');}
     else{loadSecurePayment();}
 
     payButton.addEventListener('click',function(){
