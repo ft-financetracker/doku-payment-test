@@ -1,4 +1,4 @@
-const CACHE_NAME='ft-pay-shell-v6';
+const CACHE_NAME='ft-pay-shell-v7';
 const APP_SHELL=[
   './','./index.html','./result.html','./offline.html','./manifest.webmanifest',
   './assets/ft-pay-mark.svg','./assets/ft-pay-logo.svg',

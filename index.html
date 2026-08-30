@@ -48,17 +48,19 @@
     .workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);gap:24px;align-items:stretch}
     .panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.92));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
     .panel:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .intro{padding:38px 32px 28px;min-height:520px}
-    .intro:after{content:"";position:absolute;left:32px;bottom:28px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
+    .intro{padding:42px 34px 30px;min-height:580px}
+    .intro:after{content:"";position:absolute;left:34px;bottom:30px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
     .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}.eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
     .intro h1{margin:0;max-width:560px;font-size:clamp(34px,4.8vw,56px);line-height:1.02;letter-spacing:-.045em;color:#fff}
     .intro h1 .accent{color:var(--green)}
     .intro-copy{max-width:560px;margin:20px 0 0;color:var(--muted);font-size:15px;line-height:1.72}
-    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:24px}
-    .feature{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:12px 13px;border:1px solid var(--line-2);border-radius:16px;background:rgba(255,255,255,.025)}
-    .feature-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green)}.feature-icon svg{width:16px;height:16px}
-    .feature-title{font-size:12px;font-weight:900;color:#EDF3FF;margin:1px 0 3px}
-    .feature-copy{color:#90A3CA;font-size:9.5px;line-height:1.45}
+    .security-list{display:grid;gap:10px;margin-top:28px}
+    .security-item{display:grid;grid-template-columns:38px minmax(0,1fr);gap:12px;align-items:start;padding:12px 14px;border:1px solid var(--line-2);border-radius:16px;background:rgba(255,255,255,.022);min-width:0}
+    .security-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green)}
+    .security-icon svg{width:18px;height:18px}
+    .security-copy{min-width:0}
+    .security-title{margin:1px 0 4px;font-size:13px;font-weight:900;color:#EDF3FF}
+    .security-text{margin:0;color:#90A3CA;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
     .pay-card{padding:24px}
     .card-head{padding:4px 4px 18px;border-bottom:1px solid var(--line)}
     .card-kicker{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
@@ -87,14 +89,28 @@
     .status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}
     .status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}
     .status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
-    .sandbox-tools{margin-top:12px;padding:12px 13px;border:1px dashed rgba(244,185,66,.22);border-radius:15px;background:rgba(244,185,66,.045);display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .sandbox-tools-copy{min-width:0}.sandbox-tools-title{font-size:11px;font-weight:900;color:#FFD98C;letter-spacing:.04em}.sandbox-tools-text{margin-top:3px;color:#9EADCA;font-size:10px;line-height:1.5}
-    .dummy-btn{flex:0 0 auto;border:1px solid rgba(244,185,66,.28);border-radius:12px;background:rgba(244,185,66,.08);color:#FFE0A1;padding:10px 12px;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.dummy-btn:hover{background:rgba(244,185,66,.12)}.dummy-btn:disabled{opacity:.5;cursor:not-allowed}
     .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:10px}.footer strong{color:#95A8CF;font-weight:850}
     .install-btn{display:none;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#D7E4FA;border-radius:14px;padding:11px 13px;font-size:12px;font-weight:850;cursor:pointer}
     .install-btn.show{display:inline-flex;align-items:center;gap:8px}
-    @media (max-width: 980px){.workspace{grid-template-columns:1fr}.intro{min-height:auto}.feature-grid{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width: 720px){body{padding:18px}.brandbar{margin-bottom:18px}.brand-mark{width:42px;height:42px}.brand-name{font-size:15px}.intro,.pay-card{padding:22px}.intro h1{font-size:clamp(30px,10vw,46px)}.intro-copy,.card-subtitle{font-size:14px}.feature-grid{grid-template-columns:1fr}.feature{grid-template-columns:34px 1fr}.detail-row{grid-template-columns:1fr;gap:8px}.detail-value{text-align:left}.amount-value{font-size:20px}.footer{flex-direction:column;align-items:flex-start}.sandbox-tools{align-items:stretch;flex-direction:column}.dummy-btn{width:100%}}
+    @media (max-width: 980px){
+      .workspace{grid-template-columns:1fr}
+      .intro{min-height:auto}
+    }
+    @media (max-width: 720px){
+      body{padding:18px}
+      .brandbar{margin-bottom:18px}
+      .brand-mark{width:42px;height:42px}
+      .brand-name{font-size:15px}
+      .intro,.pay-card{padding:22px}
+      .intro h1{font-size:clamp(30px,10vw,46px)}
+      .intro-copy,.card-subtitle{font-size:14px}
+      .security-item{grid-template-columns:36px minmax(0,1fr);padding:11px 12px}
+      .security-icon{width:36px;height:36px}
+      .detail-row{grid-template-columns:1fr;gap:8px}
+      .detail-value{text-align:left}
+      .amount-value{font-size:20px}
+      .footer{flex-direction:column;align-items:flex-start}
+    }
   </style>
 </head>
 <body>
@@ -116,10 +132,46 @@
         <h1 id="introTitle">Pembayaran aman.<br><span class="accent">Nominal terverifikasi.</span></h1>
         <p class="intro-copy">FT Pay memisahkan data tagihan dari browser. Customer hanya menerima tautan pembayaran, sedangkan identitas, nominal, dan status tetap diverifikasi oleh backend Finance Tracker.</p>
 
-        <div class="feature-grid">
-          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/><path d="m9.5 12 1.8 1.8L15 10.2"/></svg></div><div class="feature-title">Secure Token</div><div class="feature-copy">Akses pembayaran memakai token aman, bukan nominal yang bisa diubah dari browser.</div></div>
-          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h10M7 14h5"/></svg></div><div class="feature-title">Server-side Amount</div><div class="feature-copy">Nominal resmi hanya dibaca dari PAYMENT_REQUEST dan tidak bisa diedit user.</div></div>
-          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="m7 15 5 5 5-5"/><path d="M7 4h10"/></svg></div><div class="feature-title">Audit Trail</div><div class="feature-copy">Perubahan status tercatat otomatis pada PAYMENT_LOG, PAYMENT_REQUEST, dan history.</div></div>
+        <div class="security-list" aria-label="Payment security overview">
+          <div class="security-item">
+            <div class="security-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/>
+                <path d="m9.5 12 1.8 1.8L15 10.2"/>
+              </svg>
+            </div>
+            <div class="security-copy">
+              <div class="security-title">Secure Token</div>
+              <p class="security-text">Akses pembayaran memakai token aman, bukan nominal yang bisa diubah dari browser.</p>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="6" width="18" height="12" rx="2"/>
+                <path d="M7 10h10M7 14h5"/>
+              </svg>
+            </div>
+            <div class="security-copy">
+              <div class="security-title">Server-side Amount</div>
+              <p class="security-text">Nominal resmi dibaca dari PAYMENT_REQUEST dan tidak dapat diedit customer.</p>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20V10"/>
+                <path d="m7 15 5 5 5-5"/>
+                <path d="M7 4h10"/>
+              </svg>
+            </div>
+            <div class="security-copy">
+              <div class="security-title">Audit Trail</div>
+              <p class="security-text">Perubahan status tercatat otomatis pada PAYMENT_LOG, PAYMENT_REQUEST, dan status history.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -152,13 +204,6 @@
 
         <div id="statusBox" class="status-box loading">Memeriksa payment request...</div>
 
-        <div class="sandbox-tools" aria-label="Sandbox test tools">
-          <div class="sandbox-tools-copy">
-            <div class="sandbox-tools-title">Sandbox Test Tool</div>
-            <div class="sandbox-tools-text">Buat tagihan dummy Rp17.000 sekali klik tanpa membuka Apps Script.</div>
-          </div>
-          <button id="dummyButton" class="dummy-btn" type="button">+ Generate Dummy TRX</button>
-        </div>
       </section>
     </div>
 
@@ -166,8 +211,6 @@
   </main>
 
   <script>
-    /* FT PAY FRONTEND V6 — COMPACT UI + DOKU POPUP */
-
     /* =========================================================
      * 1. CONFIGURATION
      * ========================================================= */
@@ -217,8 +260,6 @@
     const emptyState =
       document.getElementById('emptyState');
 
-    const dummyButton =
-      document.getElementById('dummyButton');
 
 
     /* =========================================================
@@ -331,10 +372,6 @@
     );
 
 
-    dummyButton.addEventListener(
-      'click',
-      generateSandboxDummy
-    );
 
 
     /* =========================================================
@@ -661,71 +698,9 @@
     }
 
 
-    /* =========================================================
-     * 12. SANDBOX DUMMY TRANSACTION GENERATOR
-     * ========================================================= */
-
-    function generateSandboxDummy() {
-
-      dummyButton.disabled = true;
-
-      const originalText =
-        dummyButton.textContent;
-
-      dummyButton.textContent =
-        'Membuat dummy...';
-
-
-      dummyJsonpRequest(
-        function (response) {
-
-          if (
-            !response ||
-            response.success !== true ||
-            !response.data ||
-            !response.data.payment_link
-          ) {
-
-            dummyButton.disabled = false;
-            dummyButton.textContent = originalText;
-
-            showError(
-              response?.message ||
-              'Dummy transaction gagal dibuat.'
-            );
-
-            return;
-          }
-
-
-          try {
-            sessionStorage.removeItem(
-              TOKEN_STORAGE_KEY
-            );
-          } catch (error) {
-            // Safe to ignore.
-          }
-
-
-          window.location.href =
-            response.data.payment_link;
-        },
-        function (message) {
-
-          dummyButton.disabled = false;
-          dummyButton.textContent = originalText;
-
-          showError(
-            message ||
-            'Generator dummy tidak dapat dihubungi.'
-          );
-        }
-      );
-    }
-
 
     /* =========================================================
-     * 13. JSONP REQUEST — SECURE TOKEN ENDPOINTS
+     * 12. JSONP REQUEST — SECURE TOKEN ENDPOINTS
      * ========================================================= */
 
     function jsonpRequest(
@@ -816,171 +791,9 @@
     }
 
 
-    /* =========================================================
-     * 14. JSONP REQUEST — SANDBOX DUMMY ENDPOINT
-     *
-     * The dummy generator is only a Sandbox convenience tool.
-     * If the first request fails because of a temporary network
-     * issue, the browser retries once automatically.
-     * ========================================================= */
-
-    function dummyJsonpRequest(callback, onError) {
-
-      requestSandboxDummy(
-        1,
-        callback,
-        onError
-      );
-    }
-
-
-    function requestSandboxDummy(
-      attemptNumber,
-      callback,
-      onError
-    ) {
-
-      const callbackName =
-        'ftDummyCallback_' +
-        Date.now() +
-        '_' +
-        Math.random().toString(36).slice(2);
-
-      const script =
-        document.createElement('script');
-
-      let requestFinished =
-        false;
-
-
-      const timeout =
-        window.setTimeout(
-          function () {
-
-            if (requestFinished) {
-              return;
-            }
-
-            requestFinished = true;
-
-            cleanupJsonp(
-              callbackName,
-              script
-            );
-
-            handleDummyRequestFailure(
-              attemptNumber,
-              callback,
-              onError
-            );
-          },
-          15000
-        );
-
-
-      window[callbackName] =
-        function (response) {
-
-          if (requestFinished) {
-            return;
-          }
-
-          requestFinished = true;
-
-          window.clearTimeout(
-            timeout
-          );
-
-          cleanupJsonp(
-            callbackName,
-            script
-          );
-
-          callback(
-            response
-          );
-        };
-
-
-      script.src =
-        API_URL +
-        '?action=generateSandboxDummy' +
-        '&callback=' + encodeURIComponent(callbackName) +
-        '&_=' + Date.now();
-
-
-      script.onerror =
-        function () {
-
-          if (requestFinished) {
-            return;
-          }
-
-          requestFinished = true;
-
-          window.clearTimeout(
-            timeout
-          );
-
-          cleanupJsonp(
-            callbackName,
-            script
-          );
-
-          handleDummyRequestFailure(
-            attemptNumber,
-            callback,
-            onError
-          );
-        };
-
-
-      document.body.appendChild(
-        script
-      );
-    }
-
-
-    function handleDummyRequestFailure(
-      attemptNumber,
-      callback,
-      onError
-    ) {
-
-      const MAX_ATTEMPTS =
-        2;
-
-
-      if (
-        attemptNumber <
-        MAX_ATTEMPTS
-      ) {
-
-        window.setTimeout(
-          function () {
-
-            requestSandboxDummy(
-              attemptNumber + 1,
-              callback,
-              onError
-            );
-          },
-          900
-        );
-
-        return;
-      }
-
-
-      onError(
-        'Generator Sandbox belum tersambung. ' +
-        'Coba lagi. Jika tetap gagal, pastikan Web App Apps Script V6 masih aktif.'
-      );
-    }
-
 
     /* =========================================================
-     * 15. SMALL UI HELPERS
+     * 13. SMALL UI HELPERS
      * ========================================================= */
 
     function setPayButtonText(text) {
@@ -1074,7 +887,7 @@
 
 
     /* =========================================================
-     * 16. PWA SERVICE WORKER
+     * 14. PWA SERVICE WORKER
      * ========================================================= */
 
     if ('serviceWorker' in navigator) {
