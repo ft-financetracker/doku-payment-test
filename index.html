@@ -15,7 +15,6 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-  <script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
   <style>
     :root{
       --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
@@ -607,7 +606,7 @@
           }
 
 
-          openDokuCheckout(
+          redirectToDokuCheckout(
             paymentUrl,
             response?.data?.reused === true
           );
@@ -617,81 +616,27 @@
 
 
     /* =========================================================
-     * 11. OPEN DOKU CHECKOUT AS POP-UP / MODAL
+     * 11. REDIRECT TO DOKU HOSTED CHECKOUT
      *
-     * DOKU Sandbox SDK provides loadJokulCheckout(paymentUrl).
-     * If the SDK fails to load, we safely fall back to redirect.
+     * Current production-like Sandbox flow:
+     * Finance Tracker validates the request first, then the
+     * customer is redirected to DOKU's hosted checkout page.
+     *
+     * We intentionally do NOT use the DOKU pop-up SDK here.
      * ========================================================= */
 
-    function openDokuCheckout(
+    function redirectToDokuCheckout(
       paymentUrl,
       reused
     ) {
 
-      if (
-        typeof window.loadJokulCheckout === 'function'
-      ) {
-
-        setStatus(
-          'loading',
-          reused
-            ? 'Membuka kembali DOKU Checkout...'
-            : 'Membuka DOKU Checkout...'
-        );
-
-
-        try {
-
-          window.loadJokulCheckout(
-            paymentUrl
-          );
-
-
-          /*
-           * The modal can be closed by the customer.
-           * Re-enable the button so checkout can be opened again.
-           */
-          window.setTimeout(
-            function () {
-
-              payButton.disabled = false;
-
-              setPayButtonText(
-                'Buka Checkout DOKU'
-              );
-
-              setStatus(
-                'success',
-                'DOKU Checkout dibuka sebagai pop-up. ' +
-                'Status final tetap diverifikasi oleh backend.'
-              );
-            },
-            900
-          );
-
-
-          return;
-
-        } catch (error) {
-
-          console.error(
-            'DOKU Checkout popup error:',
-            error
-          );
-        }
-      }
-
-
-      /*
-       * Safe fallback:
-       * If the DOKU JS SDK is unavailable, payment still works
-       * through the original hosted checkout page.
-       */
       setStatus(
         'loading',
-        'Pop-up DOKU tidak tersedia. ' +
-        'Membuka checkout melalui halaman DOKU...'
+        reused
+          ? 'Melanjutkan transaksi DOKU yang sudah dibuat...'
+          : 'Berhasil. Mengarahkan ke DOKU...'
       );
+
 
       window.location.href =
         paymentUrl;

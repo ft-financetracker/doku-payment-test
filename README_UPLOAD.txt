@@ -1,10 +1,14 @@
-FINANCE TRACKER PAY — PWA V5 POPUP CHECKOUT
+FINANCE TRACKER PAY — PWA V8 REDIRECT
 
-Perubahan utama:
-- DOKU Checkout menggunakan modal/pop-up resmi DOKU Sandbox.
-- Jika SDK DOKU gagal dimuat, otomatis fallback ke redirect lama.
-- Sandbox Dummy Generator tetap aktif.
-- Backend Code.gs V6 tidak perlu diubah.
-- JavaScript ditulis rapi dengan section dan komentar agar mudah dipelajari.
+STATUS:
+- Frontend V7 clean UI retained
+- DOKU pop-up removed
+- Hosted checkout redirect restored
+- Dummy button remains removed
+- Service worker cache: ft-pay-shell-v8
 
-Upload/timpa isi bundle ke root repo GitHub Pages.
+UPLOAD:
+Extract this bundle and overwrite the repository root files.
+Do not upload the ZIP itself.
+
+Backend Code.gs is handled separately.
