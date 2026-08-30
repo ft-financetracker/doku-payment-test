@@ -2,29 +2,163 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="referrer" content="no-referrer">
-  <title>Status Pembayaran</title>
+  <meta name="description" content="Status pembayaran Finance Tracker Pay.">
+  <title>Status Pembayaran • FT Pay</title>
+
+  <meta name="theme-color" content="#0B132B">
+  <meta name="color-scheme" content="dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FT Pay">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;background:#f4f6f8}.card{width:100%;max-width:420px;padding:30px;background:#fff;border-radius:20px;box-shadow:0 10px 35px rgba(0,0,0,.08);text-align:center}.icon{width:72px;height:72px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:34px;font-weight:700;background:#edf2f7;color:#667085}.icon.success{background:#eaf8ef;color:#18864b}.icon.pending{background:#fff6e5;color:#b56c00}.icon.failed{background:#fff0f0;color:#b42318}h1{margin:0 0 10px;font-size:24px;color:#1d232d}.description{margin:0 auto 24px;color:#69717d;font-size:14px;line-height:1.6}.detail{display:none;padding:16px;margin-bottom:22px;background:#f7f8fa;border-radius:12px;text-align:left}.detail-row{margin-bottom:12px}.detail-row:last-child{margin-bottom:0}.label{display:block;margin-bottom:4px;color:#8a919c;font-size:11px;font-weight:700;text-transform:uppercase}.value{display:block;color:#252a31;font-size:14px;font-weight:700;word-break:break-word}.button{display:block;width:100%;padding:14px 16px;border:0;border-radius:12px;background:#191d23;color:#fff;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}.retry{display:none;width:100%;margin-top:10px;padding:13px;border:1px solid #d7dce3;border-radius:12px;background:#fff;color:#292d33;font-size:14px;font-weight:700;cursor:pointer}.footer{margin-top:20px;color:#9aa0a9;font-size:11px}
+
+    :root{
+      --navy:#0B132B;
+      --navy-2:#071126;
+      --blue:#1E3A8A;
+      --blue-2:#2E64D7;
+      --green:#B6FF00;
+      --green-soft:#D3FF42;
+      --white:#FFFFFF;
+      --ink:#EAF0FF;
+      --muted:#9AABCE;
+      --line:rgba(125,154,214,.18);
+      --panel:rgba(12,24,55,.86);
+      --panel-2:rgba(17,36,78,.58);
+      --danger:#FF6B78;
+      --warning:#F4B942;
+      --success:#B6FF00;
+      --shadow:0 30px 80px rgba(0,0,0,.38);
+    }
+    *{box-sizing:border-box}
+    html{min-height:100%;background:var(--navy)}
+    body{
+      margin:0;min-height:100vh;min-height:100dvh;padding:22px;
+      display:grid;place-items:center;overflow-x:hidden;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 620px at 100% 0%,rgba(30,58,138,.42),transparent 58%),
+        radial-gradient(700px 520px at 0% 100%,rgba(22,55,125,.30),transparent 55%),
+        linear-gradient(145deg,#071126 0%,#0B132B 50%,#08142F 100%);
+    }
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;
+      background:
+        linear-gradient(125deg,transparent 0 72%,rgba(182,255,0,.85) 72.15% 72.35%,transparent 72.5%),
+        repeating-linear-gradient(135deg,transparent 0 22px,rgba(46,100,215,.10) 23px 24px);
+      mask-image:linear-gradient(to bottom,transparent 0,#000 24%,#000 100%);
+    }
+    .shell{width:min(100%,490px);position:relative;z-index:1}
+    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 2px 15px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}
+    .brand-mark{width:43px;height:43px;flex:0 0 43px;border-radius:13px;box-shadow:0 12px 26px rgba(0,0,0,.24)}
+    .brand-copy{min-width:0}
+    .brand-name{font-size:15px;font-weight:850;letter-spacing:-.015em;color:#fff;white-space:nowrap}
+    .brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700;margin-top:2px}
+    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(244,185,66,.32);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+    .env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
+    .card{position:relative;overflow:hidden;border:1px solid rgba(123,155,220,.20);border-radius:30px;padding:25px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.94));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
+    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
+    .card:after{content:"";position:absolute;width:220px;height:220px;right:-115px;top:-105px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.22),transparent 70%);pointer-events:none}
+    .eyebrow{display:flex;align-items:center;gap:8px;color:var(--green);font-size:10px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+    .eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
+    h1{margin:0;font-size:clamp(26px,7vw,34px);line-height:1.04;letter-spacing:-.035em;color:#fff}
+    .subtitle{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.65;max-width:390px}
+    .hero{padding-bottom:20px;border-bottom:1px solid var(--line)}
+    .security-row{display:flex;align-items:center;gap:8px;margin-top:14px;color:#B9C6E2;font-size:11px}
+    .security-icon{width:20px;height:20px;display:grid;place-items:center;border-radius:7px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.20);color:var(--green)}
+    .detail{display:none;margin-top:18px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
+    .detail-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start;padding:13px 14px;border-bottom:1px solid var(--line)}
+    .detail-row:last-child{border-bottom:0}
+    .detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
+    .detail-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7185AE;padding-top:2px}
+    .detail-value{font-size:13px;font-weight:700;color:#EAF0FF;text-align:right;max-width:280px;word-break:break-word}
+    .amount-value{font-size:24px;line-height:1;font-weight:900;letter-spacing:-.03em;color:var(--green-soft)}
+    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:9px;font-weight:850;letter-spacing:.09em;text-transform:uppercase}
+    .status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+    .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}
+    .status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}
+    .status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
+    .cta{width:100%;margin-top:16px;min-height:52px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:14px;font-weight:900;letter-spacing:-.01em;cursor:pointer;box-shadow:0 12px 28px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}
+    .cta:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    .cta:active{transform:translateY(0)}
+    .cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}
+    .cta svg{width:17px;height:17px}
+    .secondary-btn{width:100%;margin-top:10px;min-height:48px;border:1px solid var(--line);border-radius:15px;padding:12px 16px;background:rgba(255,255,255,.025);color:#DCE6FA;font-size:13px;font-weight:800;cursor:pointer}
+    .status-box{display:none;margin-top:12px;padding:12px 13px;border-radius:14px;font-size:11px;line-height:1.55;border:1px solid transparent}
+    .status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}
+    .status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}
+    .status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
+    .empty{display:none;margin-top:18px;padding:18px;border-radius:18px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}
+    .empty-icon{width:46px;height:46px;margin:0 auto 10px;display:grid;place-items:center;border-radius:15px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}
+    .empty-title{font-size:13px;font-weight:850;color:#ECF2FF}
+    .empty-copy{font-size:11px;line-height:1.55;color:#8396BD;margin-top:5px}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px;padding:0 3px;color:#65789F;font-size:9px}
+    .footer strong{color:#95A8CF;font-weight:800}
+    .install-btn{display:none;border:0;background:none;color:#AFC4ED;font:inherit;font-weight:800;cursor:pointer;padding:0}
+    .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(7,17,38,.25);border-top-color:#071126;animation:spin .75s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:390px){body{padding:16px}.card{padding:20px;border-radius:25px}.detail-row{grid-template-columns:1fr}.detail-value{text-align:left;max-width:none}.amount-value{font-size:23px}.brand-sub{display:none}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}
+
+    .result-card{text-align:center}
+    .result-card .hero{padding-bottom:18px}
+    .result-icon{width:72px;height:72px;margin:0 auto 16px;display:grid;place-items:center;border-radius:22px;background:rgba(137,158,204,.07);border:1px solid var(--line);color:#9FB2D8;transition:.2s ease}
+    .result-icon svg{width:34px;height:34px}
+    .result-icon.success{color:var(--green);background:rgba(182,255,0,.07);border-color:rgba(182,255,0,.2);box-shadow:0 0 32px rgba(182,255,0,.08)}
+    .result-icon.pending{color:#8EB4FF;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}
+    .result-icon.failed{color:#FF8E98;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.18)}
+    .result-card h1{font-size:28px}
+    .result-card .subtitle{margin-left:auto;margin-right:auto}
+    .result-card .detail{text-align:left}
+    .result-card .detail-row{grid-template-columns:1fr auto}
+    .result-card .detail-value{text-align:right}
+    .button-link{text-decoration:none}
   </style>
 </head>
 <body>
-  <main class="card">
-    <div id="statusIcon" class="icon">...</div>
-    <h1 id="title">Memeriksa Pembayaran</h1>
-    <p id="descriptionText" class="description">Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.</p>
+  <main class="shell">
+    <header class="brandbar">
+      <div class="brand">
+        <img class="brand-mark" src="./icons/icon-192.png" alt="FT Pay">
+        <div class="brand-copy"><div class="brand-name">Finance Tracker Pay</div><div class="brand-sub">Payment Status</div></div>
+      </div>
+      <div class="env-badge"><span class="env-dot"></span>Sandbox</div>
+    </header>
 
-    <div id="detailBox" class="detail">
-      <div class="detail-row"><span class="label">Referensi</span><span id="referenceNumber" class="value">-</span></div>
-      <div class="detail-row"><span class="label">Customer</span><span id="customerName" class="value">-</span></div>
-      <div class="detail-row"><span class="label">Nominal</span><span id="amount" class="value">-</span></div>
-      <div class="detail-row"><span class="label">Status</span><span id="paymentStatus" class="value">Memeriksa...</span></div>
-    </div>
+    <section class="card result-card" aria-labelledby="title">
+      <div class="hero">
+        <div id="statusIcon" class="result-icon pending" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <div class="eyebrow" style="justify-content:center">Payment Status</div>
+        <h1 id="title">Memeriksa Pembayaran</h1>
+        <p id="descriptionText" class="subtitle">Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.</p>
+      </div>
 
-    <a id="backButton" class="button" href="./">Kembali ke Pembayaran</a>
-    <button id="retryButton" class="retry" type="button">Periksa Status Lagi</button>
-    <div class="footer">DOKU Sandbox • Secure Payment Result</div>
+      <div id="detailBox" class="detail">
+        <div class="detail-row"><span class="detail-label">Referensi</span><span id="referenceNumber" class="detail-value">-</span></div>
+        <div class="detail-row"><span class="detail-label">Customer</span><span id="customerName" class="detail-value">-</span></div>
+        <div class="detail-row amount-row"><span class="detail-label">Nominal</span><span id="amount" class="detail-value amount-value">-</span></div>
+        <div class="detail-row"><span class="detail-label">Status</span><span id="paymentStatus" class="status-pill">Memeriksa</span></div>
+      </div>
+
+      <a id="backButton" class="cta button-link" href="./">
+        <span>Kembali ke Pembayaran</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </a>
+      <button id="retryButton" class="secondary-btn" type="button" style="display:none">Periksa Status Lagi</button>
+    </section>
+
+    <footer class="footer"><span>Powered by <strong>DOKU Sandbox</strong></span><span>Finance Tracker</span></footer>
   </main>
 
   <script>
@@ -32,7 +166,6 @@
     const TOKEN_STORAGE_KEY='doku_secure_payment_token';
     const MAX_CHECK_ATTEMPTS=12;
     const CHECK_INTERVAL=5000;
-
     let checkAttempt=0;
     let autoCheckTimer=null;
 
@@ -50,84 +183,56 @@
     const queryParams=new URLSearchParams(window.location.search);
     const hashParams=new URLSearchParams(window.location.hash?window.location.hash.substring(1):'');
     const tokenFromUrl=String(queryParams.get('token')||hashParams.get('token')||'').trim();
-
-    if(tokenFromUrl){
-      try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}
-      try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}
-    }
-
-    let storedToken='';
-    try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
+    if(tokenFromUrl){try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}}
+    let storedToken='';try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
     const paymentToken=String(tokenFromUrl||storedToken||'').trim();
 
-    if(!paymentToken||!/^[a-f0-9]{128}$/i.test(paymentToken)){
-      showError('Link Pembayaran Tidak Valid','Status pembayaran tidak dapat dibuka dari link ini.');
-    }else{
-      backButton.href='./#token='+encodeURIComponent(paymentToken);
-      checkStatus();
-    }
+    if(!paymentToken||!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Link Pembayaran Tidak Valid','Status pembayaran tidak dapat dibuka dari link ini.');}
+    else{backButton.href='./#token='+encodeURIComponent(paymentToken);checkStatus();}
 
     function checkStatus(){
-      clearAutoCheckTimer();
-      setChecking();
+      clearAutoCheckTimer();setChecking();
       jsonpRequest('getSecurePayment',paymentToken,function(response){
         if(!response||response.success!==true||!response.data){showError('Gagal Memeriksa Pembayaran',response?.message||'Status pembayaran belum dapat diperiksa.');return;}
-        renderDetail(response.data);
-        renderStatus(String(response.data.status||'UNKNOWN').toUpperCase());
+        renderDetail(response.data);renderStatus(String(response.data.status||'UNKNOWN').toUpperCase());
       });
     }
 
     function renderDetail(data){
-      referenceNumber.textContent=data.reference_number||'-';
-      customerName.textContent=data.customer_name||'-';
-      amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');
-      paymentStatus.textContent=data.status||'-';
-      detailBox.style.display='block';
+      referenceNumber.textContent=data.reference_number||'-';customerName.textContent=data.customer_name||'-';amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');
+      const status=String(data.status||'-').toUpperCase();paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();detailBox.style.display='block';
+    }
+
+    function setIcon(type){
+      statusIcon.className='result-icon '+type;
+      if(type==='success')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.6 2.6L16.5 9"/></svg>';
+      else if(type==='failed')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg>';
+      else statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
     }
 
     function renderStatus(status){
-      paymentStatus.textContent=status;
-
-      if(status==='PAID'){
-        clearAutoCheckTimer();checkAttempt=0;statusIcon.className='icon success';statusIcon.textContent='✓';title.textContent='Pembayaran Berhasil';descriptionText.textContent='Pembayaran telah dikonfirmasi oleh sistem.';retryButton.style.display='none';return;
-      }
-
-      if(status==='EXPIRED'){
-        clearAutoCheckTimer();statusIcon.className='icon failed';statusIcon.textContent='×';title.textContent='Pembayaran Kedaluwarsa';descriptionText.textContent='Masa pembayaran telah berakhir.';retryButton.style.display='none';return;
-      }
-
-      if(status==='CANCELLED'){
-        clearAutoCheckTimer();statusIcon.className='icon failed';statusIcon.textContent='×';title.textContent='Pembayaran Dibatalkan';descriptionText.textContent='Payment request ini sudah tidak aktif.';retryButton.style.display='none';return;
-      }
-
+      paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();
+      if(status==='PAID'){clearAutoCheckTimer();checkAttempt=0;setIcon('success');title.textContent='Pembayaran Berhasil';descriptionText.textContent='Pembayaran telah dikonfirmasi dan tercatat di Finance Tracker.';retryButton.style.display='none';return;}
+      if(status==='EXPIRED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Kedaluwarsa';descriptionText.textContent='Masa pembayaran telah berakhir. Gunakan tautan pembayaran baru.';retryButton.style.display='none';return;}
+      if(status==='CANCELLED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Dibatalkan';descriptionText.textContent='Payment request ini sudah tidak aktif.';retryButton.style.display='none';return;}
       if(status==='OPEN'||status==='PAYMENT_CREATED'||status==='PROCESSING'){
-        statusIcon.className='icon pending';statusIcon.textContent='⌛';title.textContent='Menunggu Konfirmasi Pembayaran';paymentStatus.textContent='PENDING';checkAttempt++;
+        setIcon('pending');title.textContent='Menunggu Konfirmasi';paymentStatus.textContent='PENDING';paymentStatus.className='status-pill processing';checkAttempt++;
         if(checkAttempt<MAX_CHECK_ATTEMPTS){descriptionText.textContent='Pembayaran sedang diproses. Status akan diperiksa kembali secara otomatis.';retryButton.style.display='none';autoCheckTimer=setTimeout(checkStatus,CHECK_INTERVAL);}
         else{descriptionText.textContent='Pembayaran belum terkonfirmasi. Silakan periksa kembali beberapa saat lagi.';retryButton.style.display='block';}
         return;
       }
-
-      clearAutoCheckTimer();statusIcon.className='icon pending';statusIcon.textContent='?';title.textContent='Status Pembayaran';descriptionText.textContent='Status transaksi belum final.';retryButton.style.display='block';
+      clearAutoCheckTimer();setIcon('pending');title.textContent='Status Pembayaran';descriptionText.textContent='Status transaksi belum final.';retryButton.style.display='block';
     }
 
-    function setChecking(){statusIcon.className='icon';statusIcon.textContent='...';title.textContent='Memeriksa Pembayaran';descriptionText.textContent='Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.';paymentStatus.textContent='Memeriksa...';retryButton.style.display='none';}
-    function showError(heading,message){clearAutoCheckTimer();statusIcon.className='icon failed';statusIcon.textContent='!';title.textContent=heading;descriptionText.textContent=message;paymentStatus.textContent='ERROR';retryButton.style.display='block';}
+    function setChecking(){setIcon('pending');title.textContent='Memeriksa Pembayaran';descriptionText.textContent='Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.';paymentStatus.textContent='Memeriksa';paymentStatus.className='status-pill processing';retryButton.style.display='none';}
+    function showError(heading,message){clearAutoCheckTimer();setIcon('failed');title.textContent=heading;descriptionText.textContent=message;paymentStatus.textContent='ERROR';paymentStatus.className='status-pill expired';retryButton.style.display='block';}
 
-    function jsonpRequest(action,token,callback){
-      const callbackName='dokuResultCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-      const script=document.createElement('script');
-      const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server Tidak Merespons','Status pembayaran belum dapat diperiksa.');},20000);
-      window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};
-      script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);
-      script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Server Tidak Terhubung','Tidak dapat menghubungi server pembayaran.');};
-      document.body.appendChild(script);
-    }
-
+    function jsonpRequest(action,token,callback){const callbackName='ftPayResultCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server Tidak Merespons','Status pembayaran belum dapat diperiksa.');},20000);window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Server Tidak Terhubung','Tidak dapat menghubungi server pembayaran.');};document.body.appendChild(script);}
     function cleanupJsonp(callbackName,script){if(script&&script.parentNode)script.remove();try{delete window[callbackName];}catch(err){}}
     function clearAutoCheckTimer(){if(autoCheckTimer){clearTimeout(autoCheckTimer);autoCheckTimer=null;}}
     function formatMoney(amount,currency){const number=Number(amount);if(!Number.isFinite(number))return '-';try{return new Intl.NumberFormat('id-ID',{style:'currency',currency:currency||'IDR',maximumFractionDigits:0}).format(number);}catch(err){return 'Rp'+number.toLocaleString('id-ID');}}
-
     retryButton.addEventListener('click',function(){checkAttempt=0;checkStatus();});
+    if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
   </script>
 </body>
 </html>
