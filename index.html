@@ -3,464 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>DOKU Payment Test</title>
-
+  <meta name="referrer" content="no-referrer">
+  <title>DOKU Secure Payment Test</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 24px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 420px;
-
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 28px;
-
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-
-      margin-bottom: 14px;
-
-      border-radius: 999px;
-
-      background: #fff3df;
-      color: #a25b00;
-
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 26px;
-    }
-
-    .subtitle {
-      margin: 0 0 26px;
-
-      color: #6b7280;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .field {
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-
-      margin-bottom: 7px;
-
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-
-      padding: 13px 14px;
-
-      border: 1px solid #d7dce3;
-      border-radius: 12px;
-
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #333333;
-    }
-
-    button {
-      width: 100%;
-
-      padding: 14px 16px;
-
-      border: none;
-      border-radius: 12px;
-
-      background: #191d23;
-      color: #ffffff;
-
-      font-size: 15px;
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .status {
-      display: none;
-
-      margin-top: 16px;
-      padding: 12px;
-
-      border-radius: 10px;
-
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .status.loading {
-      display: block;
-
-      background: #edf5ff;
-      color: #175aa8;
-    }
-
-    .status.error {
-      display: block;
-
-      background: #fff0f0;
-      color: #b42318;
-    }
-
-    .footer {
-      margin-top: 22px;
-
-      text-align: center;
-
-      color: #999999;
-      font-size: 11px;
-    }
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;background:#f4f6f8}.card{width:100%;max-width:420px;background:#fff;border-radius:20px;padding:28px;box-shadow:0 10px 35px rgba(0,0,0,.08)}.badge{display:inline-block;padding:6px 10px;margin-bottom:14px;border-radius:999px;background:#fff3df;color:#a25b00;font-size:12px;font-weight:700}h1{margin:0 0 8px;font-size:26px}.subtitle{margin:0 0 24px;color:#6b7280;font-size:14px;line-height:1.5}.payment-detail{display:none;margin-bottom:20px;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden}.detail-row{padding:12px 14px;border-bottom:1px solid #eef0f3}.detail-row:last-child{border-bottom:none}.detail-label{display:block;margin-bottom:4px;color:#6b7280;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.detail-value{display:block;color:#191d23;font-size:14px;line-height:1.45;word-break:break-word}.amount-value{font-size:22px;font-weight:700}.status-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2f7;color:#374151;font-size:11px;font-weight:700}button{width:100%;padding:14px 16px;border:0;border-radius:12px;background:#191d23;color:#fff;font-size:15px;font-weight:700;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.status{display:none;margin-top:16px;padding:12px;border-radius:10px;font-size:13px;line-height:1.5}.status.loading{display:block;background:#edf5ff;color:#175aa8}.status.success{display:block;background:#ecfdf3;color:#067647}.status.error{display:block;background:#fff0f0;color:#b42318}.footer{margin-top:22px;text-align:center;color:#999;font-size:11px}
   </style>
 </head>
-
 <body>
-
   <div class="card">
+    <div class="badge">SANDBOX MODE</div>
+    <h1>DOKU Secure Payment</h1>
+    <p class="subtitle">Detail pembayaran diambil langsung dari backend. Nominal tidak ditentukan dari browser.</p>
 
-    <div class="badge">
-      SANDBOX MODE
+    <div id="paymentDetail" class="payment-detail">
+      <div class="detail-row"><span class="detail-label">Referensi</span><span id="referenceNumber" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Customer</span><span id="customerName" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Keterangan</span><span id="description" class="detail-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Nominal Resmi</span><span id="amount" class="detail-value amount-value">-</span></div>
+      <div class="detail-row"><span class="detail-label">Status</span><span id="paymentStatus" class="status-pill">-</span></div>
     </div>
 
-    <h1>DOKU Payment Test</h1>
-
-    <p class="subtitle">
-      Test pembayaran menggunakan GitHub Pages,
-      Google Apps Script, Spreadsheet dan DOKU Checkout.
-    </p>
-
-
-    <form id="paymentForm">
-
-      <div class="field">
-
-        <label for="name">
-          Nama
-        </label>
-
-        <input
-          id="name"
-          type="text"
-          value="Adhit Test"
-          placeholder="Nama customer"
-          required
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label for="amount">
-          Nominal Pembayaran
-        </label>
-
-        <input
-          id="amount"
-          type="number"
-          value="10000"
-          min="1"
-          required
-        >
-
-      </div>
-
-
-      <button
-        id="payButton"
-        type="submit"
-      >
-        Bayar dengan DOKU
-      </button>
-
-
-      <div
-        id="status"
-        class="status"
-      ></div>
-
-    </form>
-
-
-    <div class="footer">
-      DOKU Sandbox • Payment Test
-    </div>
-
+    <button id="payButton" type="button" disabled>Memuat pembayaran...</button>
+    <div id="statusBox" class="status loading">Memeriksa payment request...</div>
+    <div class="footer">DOKU Sandbox • Secure Token Payment Test</div>
   </div>
 
-
   <script>
+    const API_URL='https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+    const paymentDetail=document.getElementById('paymentDetail');
+    const referenceNumber=document.getElementById('referenceNumber');
+    const customerName=document.getElementById('customerName');
+    const description=document.getElementById('description');
+    const amountBox=document.getElementById('amount');
+    const paymentStatus=document.getElementById('paymentStatus');
+    const payButton=document.getElementById('payButton');
+    const statusBox=document.getElementById('statusBox');
+    const params=new URLSearchParams(window.location.search);
+    const paymentToken=String(params.get('token')||'').trim();
+    let currentPayment=null;
 
-    const API_URL =
-      'https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+    if(!paymentToken){showError('Payment token tidak ditemukan. Gunakan link pembayaran yang valid.');}
+    else{loadSecurePayment();}
 
+    payButton.addEventListener('click',function(){
+      if(!currentPayment||currentPayment.can_pay!==true)return;
+      createSecurePayment();
+    });
 
-    const form =
-      document.getElementById('paymentForm');
-
-    const button =
-      document.getElementById('payButton');
-
-    const statusBox =
-      document.getElementById('status');
-
-
-    form.addEventListener(
-      'submit',
-      function (event) {
-
-        event.preventDefault();
-
-
-        const name =
-          document
-            .getElementById('name')
-            .value
-            .trim();
-
-
-        const amount =
-          Number(
-            document
-              .getElementById('amount')
-              .value
-          );
-
-
-        if (!name) {
-          showError('Nama wajib diisi.');
-          return;
-        }
-
-
-        if (
-          !Number.isFinite(amount) ||
-          amount <= 0
-        ) {
-          showError(
-            'Nominal pembayaran tidak valid.'
-          );
-
-          return;
-        }
-
-
-        createPayment(
-          name,
-          amount
-        );
-      }
-    );
-
-
-    function createPayment(
-      name,
-      amount
-    ) {
-
-      setLoading(true);
-
-
-      const callbackName =
-        'dokuCallback_' +
-        Date.now();
-
-
-      window[callbackName] =
-        function (response) {
-
-          cleanup(callbackName);
-
-
-          if (
-            !response ||
-            response.success !== true
-          ) {
-
-            showError(
-              response?.message ||
-              'Gagal membuat pembayaran.'
-            );
-
-            return;
-          }
-
-
-          const paymentUrl =
-            response?.data?.payment_url;
-
-
-          if (!paymentUrl) {
-
-            showError(
-              'Payment URL tidak ditemukan.'
-            );
-
-            return;
-          }
-
-
-          statusBox.className =
-            'status loading';
-
-          statusBox.textContent =
-            'Berhasil. Mengarahkan ke DOKU...';
-
-
-          window.location.href =
-            paymentUrl;
-        };
-
-
-      const url =
-        API_URL +
-
-        '?action=createPayment' +
-
-        '&name=' +
-        encodeURIComponent(name) +
-
-        '&amount=' +
-        encodeURIComponent(amount) +
-
-        '&callback=' +
-        encodeURIComponent(callbackName);
-
-
-      const script =
-        document.createElement('script');
-
-
-      script.id =
-        callbackName;
-
-
-      script.src =
-        url;
-
-
-      script.onerror =
-        function () {
-
-          cleanup(callbackName);
-
-          showError(
-            'Tidak dapat menghubungi server pembayaran.'
-          );
-        };
-
-
-      document.body.appendChild(
-        script
-      );
+    function loadSecurePayment(){
+      setStatus('loading','Memeriksa payment request...');
+      payButton.disabled=true;
+      payButton.textContent='Memuat pembayaran...';
+      jsonpRequest('getSecurePayment',paymentToken,function(response){
+        if(!response||response.success!==true||!response.data){showError(response?.message||'Payment request tidak dapat dibaca.');return;}
+        currentPayment=response.data;
+        renderPayment(currentPayment);
+      });
     }
 
+    function renderPayment(data){
+      referenceNumber.textContent=data.reference_number||'-';
+      customerName.textContent=data.customer_name||'-';
+      description.textContent=data.description||'-';
+      amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');
+      paymentStatus.textContent=data.status||'-';
+      paymentDetail.style.display='block';
 
-    function cleanup(
-      callbackName
-    ) {
-
-      const script =
-        document.getElementById(
-          callbackName
-        );
-
-
-      if (script) {
-        script.remove();
+      if(data.status==='PAID'){
+        payButton.disabled=true;
+        payButton.textContent='Pembayaran Sudah Berhasil';
+        setStatus('success','Pembayaran ini sudah berhasil.');
+        return;
       }
 
-
-      try {
-        delete window[
-          callbackName
-        ];
-      } catch (err) {}
-    }
-
-
-    function setLoading(
-      loading
-    ) {
-
-      button.disabled =
-        loading;
-
-
-      if (loading) {
-
-        button.textContent =
-          'Memproses...';
-
-        statusBox.className =
-          'status loading';
-
-        statusBox.textContent =
-          'Membuat transaksi DOKU...';
-
-      } else {
-
-        button.textContent =
-          'Bayar dengan DOKU';
+      if(data.status==='EXPIRED'){
+        payButton.disabled=true;
+        payButton.textContent='Pembayaran Kedaluwarsa';
+        showError('Link pembayaran ini sudah kedaluwarsa.');
+        return;
       }
+
+      if(data.can_pay!==true){
+        payButton.disabled=true;
+        payButton.textContent='Pembayaran Tidak Tersedia';
+        showError('Pembayaran belum dapat diproses untuk status ini.');
+        return;
+      }
+
+      payButton.disabled=false;
+      payButton.textContent=data.payment_created===true?'Lanjutkan Pembayaran':'Bayar dengan DOKU';
+      setStatus('success','Detail pembayaran berhasil diverifikasi dari backend.');
     }
 
-
-    function showError(
-      message
-    ) {
-
-      button.disabled =
-        false;
-
-      button.textContent =
-        'Bayar dengan DOKU';
-
-      statusBox.className =
-        'status error';
-
-      statusBox.textContent =
-        message;
+    function createSecurePayment(){
+      payButton.disabled=true;
+      payButton.textContent='Memproses...';
+      setStatus('loading','Membuat transaksi DOKU...');
+      jsonpRequest('createSecurePayment',paymentToken,function(response){
+        if(!response||response.success!==true){payButton.disabled=false;payButton.textContent='Coba Lagi';showError(response?.message||'Gagal membuat pembayaran.');return;}
+        const paymentUrl=response?.data?.payment_url;
+        if(!paymentUrl){payButton.disabled=false;payButton.textContent='Coba Lagi';showError('Payment URL tidak ditemukan.');return;}
+        setStatus('loading',response?.data?.reused===true?'Melanjutkan transaksi DOKU yang sudah dibuat...':'Berhasil. Mengarahkan ke DOKU...');
+        window.location.href=paymentUrl;
+      });
     }
 
+    function jsonpRequest(action,token,callback){
+      const callbackName='dokuSecureCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const script=document.createElement('script');
+      const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server pembayaran tidak merespons. Silakan coba lagi.');payButton.disabled=false;payButton.textContent='Coba Lagi';},20000);
+      window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};
+      script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);
+      script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Tidak dapat menghubungi server pembayaran.');payButton.disabled=false;payButton.textContent='Coba Lagi';};
+      document.body.appendChild(script);
+    }
+
+    function cleanupJsonp(callbackName,script){
+      if(script&&script.parentNode)script.remove();
+      try{delete window[callbackName];}catch(err){}
+    }
+
+    function formatMoney(amount,currency){
+      const number=Number(amount);
+      if(!Number.isFinite(number))return '-';
+      try{return new Intl.NumberFormat('id-ID',{style:'currency',currency:currency||'IDR',maximumFractionDigits:0}).format(number);}
+      catch(err){return 'Rp'+number.toLocaleString('id-ID');}
+    }
+
+    function setStatus(type,message){statusBox.className='status '+type;statusBox.textContent=message;}
+    function showError(message){setStatus('error',message);}
   </script>
-
 </body>
 </html>
