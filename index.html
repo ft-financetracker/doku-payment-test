@@ -15,6 +15,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
   <style>
     :root{
       --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
@@ -47,17 +48,17 @@
     .workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);gap:24px;align-items:stretch}
     .panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.92));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
     .panel:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .intro{padding:42px 34px 30px;min-height:580px}
-    .intro:after{content:"";position:absolute;left:34px;bottom:30px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
+    .intro{padding:38px 32px 28px;min-height:520px}
+    .intro:after{content:"";position:absolute;left:32px;bottom:28px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
     .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}.eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
     .intro h1{margin:0;max-width:560px;font-size:clamp(34px,4.8vw,56px);line-height:1.02;letter-spacing:-.045em;color:#fff}
     .intro h1 .accent{color:var(--green)}
     .intro-copy{max-width:560px;margin:20px 0 0;color:var(--muted);font-size:15px;line-height:1.72}
-    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
-    .feature{padding:16px;border:1px solid var(--line-2);border-radius:18px;background:rgba(255,255,255,.025)}
-    .feature-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green);margin-bottom:12px}.feature-icon svg{width:18px;height:18px}
-    .feature-title{font-size:13px;font-weight:900;color:#EDF3FF;margin:0 0 6px}
-    .feature-copy{color:#90A3CA;font-size:11px;line-height:1.58}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:24px}
+    .feature{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:12px 13px;border:1px solid var(--line-2);border-radius:16px;background:rgba(255,255,255,.025)}
+    .feature-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green)}.feature-icon svg{width:16px;height:16px}
+    .feature-title{font-size:12px;font-weight:900;color:#EDF3FF;margin:1px 0 3px}
+    .feature-copy{color:#90A3CA;font-size:9.5px;line-height:1.45}
     .pay-card{padding:24px}
     .card-head{padding:4px 4px 18px;border-bottom:1px solid var(--line)}
     .card-kicker{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
@@ -93,7 +94,7 @@
     .install-btn{display:none;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#D7E4FA;border-radius:14px;padding:11px 13px;font-size:12px;font-weight:850;cursor:pointer}
     .install-btn.show{display:inline-flex;align-items:center;gap:8px}
     @media (max-width: 980px){.workspace{grid-template-columns:1fr}.intro{min-height:auto}.feature-grid{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width: 720px){body{padding:18px}.brandbar{margin-bottom:18px}.brand-mark{width:42px;height:42px}.brand-name{font-size:15px}.intro,.pay-card{padding:22px}.intro h1{font-size:clamp(30px,10vw,46px)}.intro-copy,.card-subtitle{font-size:14px}.feature-grid{grid-template-columns:1fr}.detail-row{grid-template-columns:1fr;gap:8px}.detail-value{text-align:left}.amount-value{font-size:20px}.footer{flex-direction:column;align-items:flex-start}.sandbox-tools{align-items:stretch;flex-direction:column}.dummy-btn{width:100%}}
+    @media (max-width: 720px){body{padding:18px}.brandbar{margin-bottom:18px}.brand-mark{width:42px;height:42px}.brand-name{font-size:15px}.intro,.pay-card{padding:22px}.intro h1{font-size:clamp(30px,10vw,46px)}.intro-copy,.card-subtitle{font-size:14px}.feature-grid{grid-template-columns:1fr}.feature{grid-template-columns:34px 1fr}.detail-row{grid-template-columns:1fr;gap:8px}.detail-value{text-align:left}.amount-value{font-size:20px}.footer{flex-direction:column;align-items:flex-start}.sandbox-tools{align-items:stretch;flex-direction:column}.dummy-btn{width:100%}}
   </style>
 </head>
 <body>
@@ -165,74 +166,931 @@
   </main>
 
   <script>
-    const API_URL='https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
-    const TOKEN_STORAGE_KEY='doku_secure_payment_token';
-    let deferredPrompt=null;
-    let currentPayment=null;
+    /* FT PAY FRONTEND V6 — COMPACT UI + DOKU POPUP */
 
-    const paymentDetail=document.getElementById('paymentDetail');
-    const referenceNumber=document.getElementById('referenceNumber');
-    const customerName=document.getElementById('customerName');
-    const description=document.getElementById('description');
-    const amountBox=document.getElementById('amount');
-    const paymentStatus=document.getElementById('paymentStatus');
-    const payButton=document.getElementById('payButton');
-    const statusBox=document.getElementById('statusBox');
-    const emptyState=document.getElementById('emptyState');
-    const dummyButton=document.getElementById('dummyButton');
+    /* =========================================================
+     * 1. CONFIGURATION
+     * ========================================================= */
 
-    const queryParams=new URLSearchParams(window.location.search);
-    const hashParams=new URLSearchParams(window.location.hash?window.location.hash.substring(1):'');
-    const tokenFromUrl=String(queryParams.get('token')||hashParams.get('token')||'').trim();
-    if(tokenFromUrl){try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}}
-    let storedToken='';try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
-    const paymentToken=String(tokenFromUrl||storedToken||'').trim();
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
 
-    if(!paymentToken){showEmpty();}
-    else if(!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Format payment token tidak valid. Gunakan tautan pembayaran resmi.');}
-    else{loadSecurePayment();}
+    const TOKEN_STORAGE_KEY =
+      'doku_secure_payment_token';
 
-    payButton.addEventListener('click',function(){if(!currentPayment||currentPayment.can_pay!==true)return;createSecurePayment();});
-    dummyButton.addEventListener('click',generateSandboxDummy);
 
-    function showEmpty(){emptyState.style.display='block';payButton.disabled=true;payButton.style.display='none';statusBox.style.display='none';}
-    function loadSecurePayment(){setStatus('loading','Memeriksa payment request...');payButton.disabled=true;payButton.style.display='flex';payButton.firstElementChild.textContent='Memuat pembayaran...';jsonpRequest('getSecurePayment',paymentToken,function(response){if(!response||response.success!==true||!response.data){showError(response?.message||'Payment request tidak dapat dibaca.');return;}currentPayment=response.data;renderPayment(currentPayment);});}
-    function renderPayment(data){referenceNumber.textContent=data.reference_number||'-';customerName.textContent=data.customer_name||'-';description.textContent=data.description||'-';amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');paymentStatus.textContent=data.status||'-';paymentStatus.className='status-pill '+String(data.status||'').toLowerCase();paymentDetail.style.display='block';if(data.status==='PAID'){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Sudah Berhasil';setStatus('success','Pembayaran ini sudah berhasil.');return;}if(data.status==='EXPIRED'){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Kedaluwarsa';showError('Link pembayaran ini sudah kedaluwarsa.');return;}if(data.can_pay!==true){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Tidak Tersedia';showError('Pembayaran belum dapat diproses untuk status ini.');return;}payButton.disabled=false;payButton.firstElementChild.textContent=data.payment_created===true?'Lanjutkan Pembayaran':'Bayar dengan DOKU';setStatus('success','Detail pembayaran berhasil diverifikasi dari backend.');}
-    function createSecurePayment(){payButton.disabled=true;payButton.firstElementChild.textContent='Memproses...';setStatus('loading','Membuat transaksi DOKU...');jsonpRequest('createSecurePayment',paymentToken,function(response){if(!response||response.success!==true){payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';showError(response?.message||'Gagal membuat pembayaran.');return;}const paymentUrl=response?.data?.payment_url;if(!paymentUrl){payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';showError('Payment URL tidak ditemukan.');return;}setStatus('loading',response?.data?.reused===true?'Melanjutkan transaksi DOKU yang sudah dibuat...':'Berhasil. Mengarahkan ke DOKU...');window.location.href=paymentUrl;});}
-    function jsonpRequest(action,token,callback){const callbackName='ftPayCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server pembayaran tidak merespons. Silakan coba lagi.');payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';},20000);window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Tidak dapat menghubungi server pembayaran.');payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';};document.body.appendChild(script);}
-    function generateSandboxDummy(){
-      dummyButton.disabled=true;
-      const oldText=dummyButton.textContent;
-      dummyButton.textContent='Membuat dummy...';
-      dummyJsonpRequest(function(response){
-        if(!response||response.success!==true||!response.data||!response.data.payment_link){
-          dummyButton.disabled=false;
-          dummyButton.textContent=oldText;
-          showError(response?.message||'Dummy transaction gagal dibuat.');
+    /* =========================================================
+     * 2. PAGE STATE
+     * ========================================================= */
+
+    let currentPayment = null;
+
+
+    /* =========================================================
+     * 3. DOM ELEMENTS
+     * ========================================================= */
+
+    const paymentDetail =
+      document.getElementById('paymentDetail');
+
+    const referenceNumber =
+      document.getElementById('referenceNumber');
+
+    const customerName =
+      document.getElementById('customerName');
+
+    const description =
+      document.getElementById('description');
+
+    const amountBox =
+      document.getElementById('amount');
+
+    const paymentStatus =
+      document.getElementById('paymentStatus');
+
+    const payButton =
+      document.getElementById('payButton');
+
+    const statusBox =
+      document.getElementById('statusBox');
+
+    const emptyState =
+      document.getElementById('emptyState');
+
+    const dummyButton =
+      document.getElementById('dummyButton');
+
+
+    /* =========================================================
+     * 4. READ SECURE TOKEN
+     *
+     * Token can arrive from:
+     * - #token=...  (preferred)
+     * - ?token=...  (legacy-compatible)
+     *
+     * After it is read, the token is removed from the address bar
+     * and stored temporarily in sessionStorage.
+     * ========================================================= */
+
+    const queryParams =
+      new URLSearchParams(window.location.search);
+
+    const hashParams =
+      new URLSearchParams(
+        window.location.hash
+          ? window.location.hash.substring(1)
+          : ''
+      );
+
+    const tokenFromUrl = String(
+      queryParams.get('token') ||
+      hashParams.get('token') ||
+      ''
+    ).trim();
+
+
+    if (tokenFromUrl) {
+
+      try {
+        sessionStorage.setItem(
+          TOKEN_STORAGE_KEY,
+          tokenFromUrl
+        );
+      } catch (error) {
+        // sessionStorage may be blocked by the browser.
+      }
+
+
+      try {
+        history.replaceState(
+          null,
+          document.title,
+          window.location.pathname
+        );
+      } catch (error) {
+        // URL cleanup is useful, but not required for payment flow.
+      }
+    }
+
+
+    let storedToken = '';
+
+    try {
+      storedToken =
+        sessionStorage.getItem(TOKEN_STORAGE_KEY) || '';
+    } catch (error) {
+      storedToken = '';
+    }
+
+
+    const paymentToken = String(
+      tokenFromUrl ||
+      storedToken ||
+      ''
+    ).trim();
+
+
+    /* =========================================================
+     * 5. INITIAL PAGE LOAD
+     * ========================================================= */
+
+    if (!paymentToken) {
+
+      showEmpty();
+
+    } else if (!/^[a-f0-9]{128}$/i.test(paymentToken)) {
+
+      showError(
+        'Format payment token tidak valid. ' +
+        'Gunakan tautan pembayaran resmi.'
+      );
+
+    } else {
+
+      loadSecurePayment();
+    }
+
+
+    /* =========================================================
+     * 6. BUTTON EVENTS
+     * ========================================================= */
+
+    payButton.addEventListener(
+      'click',
+      function () {
+
+        if (
+          !currentPayment ||
+          currentPayment.can_pay !== true
+        ) {
           return;
         }
-        try{sessionStorage.removeItem(TOKEN_STORAGE_KEY);}catch(err){}
-        window.location.href=response.data.payment_link;
-      },function(message){
-        dummyButton.disabled=false;
-        dummyButton.textContent=oldText;
-        showError(message||'Generator dummy tidak dapat dihubungi.');
-      });
+
+        createSecurePayment();
+      }
+    );
+
+
+    dummyButton.addEventListener(
+      'click',
+      generateSandboxDummy
+    );
+
+
+    /* =========================================================
+     * 7. EMPTY STATE
+     * ========================================================= */
+
+    function showEmpty() {
+
+      emptyState.style.display = 'block';
+
+      payButton.disabled = true;
+      payButton.style.display = 'none';
+
+      statusBox.style.display = 'none';
     }
-    function dummyJsonpRequest(callback,onError){
-      const callbackName='ftDummyCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-      const script=document.createElement('script');
-      const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);onError('Server generator dummy tidak merespons.');},20000);
-      window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};
-      script.src=API_URL+'?action=generateSandboxDummy&callback='+encodeURIComponent(callbackName);
-      script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);onError('Tidak dapat menghubungi generator dummy.');};
-      document.body.appendChild(script);
+
+
+    /* =========================================================
+     * 8. LOAD PAYMENT DETAIL FROM BACKEND
+     * ========================================================= */
+
+    function loadSecurePayment() {
+
+      setStatus(
+        'loading',
+        'Memeriksa payment request...'
+      );
+
+      payButton.disabled = true;
+      payButton.style.display = 'flex';
+
+      setPayButtonText(
+        'Memuat pembayaran...'
+      );
+
+
+      jsonpRequest(
+        'getSecurePayment',
+        paymentToken,
+        function (response) {
+
+          if (
+            !response ||
+            response.success !== true ||
+            !response.data
+          ) {
+
+            showError(
+              response?.message ||
+              'Payment request tidak dapat dibaca.'
+            );
+
+            return;
+          }
+
+
+          currentPayment =
+            response.data;
+
+          renderPayment(
+            currentPayment
+          );
+        }
+      );
     }
-    function cleanupJsonp(callbackName,script){if(script&&script.parentNode)script.remove();try{delete window[callbackName];}catch(err){}}
-    function formatMoney(amount,currency){const number=Number(amount);if(!Number.isFinite(number))return '-';try{return new Intl.NumberFormat('id-ID',{style:'currency',currency:currency||'IDR',maximumFractionDigits:0}).format(number);}catch(err){return 'Rp'+number.toLocaleString('id-ID');}}
-    function setStatus(type,message){statusBox.className='status-box '+type;statusBox.textContent=message;statusBox.style.display='block';}
-    function showError(message){setStatus('error',message);}
-    if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+
+
+    /* =========================================================
+     * 9. RENDER PAYMENT DETAIL
+     * ========================================================= */
+
+    function renderPayment(data) {
+
+      referenceNumber.textContent =
+        data.reference_number || '-';
+
+      customerName.textContent =
+        data.customer_name || '-';
+
+      description.textContent =
+        data.description || '-';
+
+      amountBox.textContent =
+        formatMoney(
+          data.amount,
+          data.currency || 'IDR'
+        );
+
+
+      const status = String(
+        data.status || '-'
+      ).toUpperCase();
+
+
+      paymentStatus.textContent =
+        status;
+
+      paymentStatus.className =
+        'status-pill ' + status.toLowerCase();
+
+      paymentDetail.style.display =
+        'block';
+
+
+      if (status === 'PAID') {
+
+        payButton.disabled = true;
+
+        setPayButtonText(
+          'Pembayaran Sudah Berhasil'
+        );
+
+        setStatus(
+          'success',
+          'Pembayaran ini sudah berhasil.'
+        );
+
+        return;
+      }
+
+
+      if (status === 'EXPIRED') {
+
+        payButton.disabled = true;
+
+        setPayButtonText(
+          'Pembayaran Kedaluwarsa'
+        );
+
+        showError(
+          'Link pembayaran ini sudah kedaluwarsa.'
+        );
+
+        return;
+      }
+
+
+      if (data.can_pay !== true) {
+
+        payButton.disabled = true;
+
+        setPayButtonText(
+          'Pembayaran Tidak Tersedia'
+        );
+
+        showError(
+          'Pembayaran belum dapat diproses untuk status ini.'
+        );
+
+        return;
+      }
+
+
+      payButton.disabled = false;
+
+      setPayButtonText(
+        data.payment_created === true
+          ? 'Buka Checkout DOKU'
+          : 'Bayar dengan DOKU'
+      );
+
+      setStatus(
+        'success',
+        'Detail pembayaran berhasil diverifikasi dari backend.'
+      );
+    }
+
+
+    /* =========================================================
+     * 10. CREATE / REUSE SECURE DOKU PAYMENT
+     *
+     * IMPORTANT:
+     * Browser only sends the secure token.
+     * Amount is still read from PAYMENT_REQUEST by the backend.
+     * ========================================================= */
+
+    function createSecurePayment() {
+
+      payButton.disabled = true;
+
+      setPayButtonText(
+        'Memproses...'
+      );
+
+      setStatus(
+        'loading',
+        'Menyiapkan DOKU Checkout...'
+      );
+
+
+      jsonpRequest(
+        'createSecurePayment',
+        paymentToken,
+        function (response) {
+
+          if (
+            !response ||
+            response.success !== true
+          ) {
+
+            payButton.disabled = false;
+
+            setPayButtonText(
+              'Coba Lagi'
+            );
+
+            showError(
+              response?.message ||
+              'Gagal membuat pembayaran.'
+            );
+
+            return;
+          }
+
+
+          const paymentUrl =
+            response?.data?.payment_url;
+
+
+          if (!paymentUrl) {
+
+            payButton.disabled = false;
+
+            setPayButtonText(
+              'Coba Lagi'
+            );
+
+            showError(
+              'Payment URL tidak ditemukan.'
+            );
+
+            return;
+          }
+
+
+          openDokuCheckout(
+            paymentUrl,
+            response?.data?.reused === true
+          );
+        }
+      );
+    }
+
+
+    /* =========================================================
+     * 11. OPEN DOKU CHECKOUT AS POP-UP / MODAL
+     *
+     * DOKU Sandbox SDK provides loadJokulCheckout(paymentUrl).
+     * If the SDK fails to load, we safely fall back to redirect.
+     * ========================================================= */
+
+    function openDokuCheckout(
+      paymentUrl,
+      reused
+    ) {
+
+      if (
+        typeof window.loadJokulCheckout === 'function'
+      ) {
+
+        setStatus(
+          'loading',
+          reused
+            ? 'Membuka kembali DOKU Checkout...'
+            : 'Membuka DOKU Checkout...'
+        );
+
+
+        try {
+
+          window.loadJokulCheckout(
+            paymentUrl
+          );
+
+
+          /*
+           * The modal can be closed by the customer.
+           * Re-enable the button so checkout can be opened again.
+           */
+          window.setTimeout(
+            function () {
+
+              payButton.disabled = false;
+
+              setPayButtonText(
+                'Buka Checkout DOKU'
+              );
+
+              setStatus(
+                'success',
+                'DOKU Checkout dibuka sebagai pop-up. ' +
+                'Status final tetap diverifikasi oleh backend.'
+              );
+            },
+            900
+          );
+
+
+          return;
+
+        } catch (error) {
+
+          console.error(
+            'DOKU Checkout popup error:',
+            error
+          );
+        }
+      }
+
+
+      /*
+       * Safe fallback:
+       * If the DOKU JS SDK is unavailable, payment still works
+       * through the original hosted checkout page.
+       */
+      setStatus(
+        'loading',
+        'Pop-up DOKU tidak tersedia. ' +
+        'Membuka checkout melalui halaman DOKU...'
+      );
+
+      window.location.href =
+        paymentUrl;
+    }
+
+
+    /* =========================================================
+     * 12. SANDBOX DUMMY TRANSACTION GENERATOR
+     * ========================================================= */
+
+    function generateSandboxDummy() {
+
+      dummyButton.disabled = true;
+
+      const originalText =
+        dummyButton.textContent;
+
+      dummyButton.textContent =
+        'Membuat dummy...';
+
+
+      dummyJsonpRequest(
+        function (response) {
+
+          if (
+            !response ||
+            response.success !== true ||
+            !response.data ||
+            !response.data.payment_link
+          ) {
+
+            dummyButton.disabled = false;
+            dummyButton.textContent = originalText;
+
+            showError(
+              response?.message ||
+              'Dummy transaction gagal dibuat.'
+            );
+
+            return;
+          }
+
+
+          try {
+            sessionStorage.removeItem(
+              TOKEN_STORAGE_KEY
+            );
+          } catch (error) {
+            // Safe to ignore.
+          }
+
+
+          window.location.href =
+            response.data.payment_link;
+        },
+        function (message) {
+
+          dummyButton.disabled = false;
+          dummyButton.textContent = originalText;
+
+          showError(
+            message ||
+            'Generator dummy tidak dapat dihubungi.'
+          );
+        }
+      );
+    }
+
+
+    /* =========================================================
+     * 13. JSONP REQUEST — SECURE TOKEN ENDPOINTS
+     * ========================================================= */
+
+    function jsonpRequest(
+      action,
+      token,
+      callback
+    ) {
+
+      const callbackName =
+        'ftPayCallback_' +
+        Date.now() +
+        '_' +
+        Math.random().toString(36).slice(2);
+
+      const script =
+        document.createElement('script');
+
+
+      const timeout =
+        window.setTimeout(
+          function () {
+
+            cleanupJsonp(
+              callbackName,
+              script
+            );
+
+            showError(
+              'Server pembayaran tidak merespons. Silakan coba lagi.'
+            );
+
+            payButton.disabled = false;
+
+            setPayButtonText(
+              'Coba Lagi'
+            );
+          },
+          20000
+        );
+
+
+      window[callbackName] =
+        function (response) {
+
+          window.clearTimeout(timeout);
+
+          cleanupJsonp(
+            callbackName,
+            script
+          );
+
+          callback(response);
+        };
+
+
+      script.src =
+        API_URL +
+        '?action=' + encodeURIComponent(action) +
+        '&token=' + encodeURIComponent(token) +
+        '&callback=' + encodeURIComponent(callbackName);
+
+
+      script.onerror =
+        function () {
+
+          window.clearTimeout(timeout);
+
+          cleanupJsonp(
+            callbackName,
+            script
+          );
+
+          showError(
+            'Tidak dapat menghubungi server pembayaran.'
+          );
+
+          payButton.disabled = false;
+
+          setPayButtonText(
+            'Coba Lagi'
+          );
+        };
+
+
+      document.body.appendChild(
+        script
+      );
+    }
+
+
+    /* =========================================================
+     * 14. JSONP REQUEST — SANDBOX DUMMY ENDPOINT
+     *
+     * The dummy generator is only a Sandbox convenience tool.
+     * If the first request fails because of a temporary network
+     * issue, the browser retries once automatically.
+     * ========================================================= */
+
+    function dummyJsonpRequest(callback, onError) {
+
+      requestSandboxDummy(
+        1,
+        callback,
+        onError
+      );
+    }
+
+
+    function requestSandboxDummy(
+      attemptNumber,
+      callback,
+      onError
+    ) {
+
+      const callbackName =
+        'ftDummyCallback_' +
+        Date.now() +
+        '_' +
+        Math.random().toString(36).slice(2);
+
+      const script =
+        document.createElement('script');
+
+      let requestFinished =
+        false;
+
+
+      const timeout =
+        window.setTimeout(
+          function () {
+
+            if (requestFinished) {
+              return;
+            }
+
+            requestFinished = true;
+
+            cleanupJsonp(
+              callbackName,
+              script
+            );
+
+            handleDummyRequestFailure(
+              attemptNumber,
+              callback,
+              onError
+            );
+          },
+          15000
+        );
+
+
+      window[callbackName] =
+        function (response) {
+
+          if (requestFinished) {
+            return;
+          }
+
+          requestFinished = true;
+
+          window.clearTimeout(
+            timeout
+          );
+
+          cleanupJsonp(
+            callbackName,
+            script
+          );
+
+          callback(
+            response
+          );
+        };
+
+
+      script.src =
+        API_URL +
+        '?action=generateSandboxDummy' +
+        '&callback=' + encodeURIComponent(callbackName) +
+        '&_=' + Date.now();
+
+
+      script.onerror =
+        function () {
+
+          if (requestFinished) {
+            return;
+          }
+
+          requestFinished = true;
+
+          window.clearTimeout(
+            timeout
+          );
+
+          cleanupJsonp(
+            callbackName,
+            script
+          );
+
+          handleDummyRequestFailure(
+            attemptNumber,
+            callback,
+            onError
+          );
+        };
+
+
+      document.body.appendChild(
+        script
+      );
+    }
+
+
+    function handleDummyRequestFailure(
+      attemptNumber,
+      callback,
+      onError
+    ) {
+
+      const MAX_ATTEMPTS =
+        2;
+
+
+      if (
+        attemptNumber <
+        MAX_ATTEMPTS
+      ) {
+
+        window.setTimeout(
+          function () {
+
+            requestSandboxDummy(
+              attemptNumber + 1,
+              callback,
+              onError
+            );
+          },
+          900
+        );
+
+        return;
+      }
+
+
+      onError(
+        'Generator Sandbox belum tersambung. ' +
+        'Coba lagi. Jika tetap gagal, pastikan Web App Apps Script V6 masih aktif.'
+      );
+    }
+
+
+    /* =========================================================
+     * 15. SMALL UI HELPERS
+     * ========================================================= */
+
+    function setPayButtonText(text) {
+
+      const label =
+        payButton.querySelector('span');
+
+      if (label) {
+        label.textContent = text;
+      }
+    }
+
+
+    function setStatus(
+      type,
+      message
+    ) {
+
+      statusBox.className =
+        'status-box ' + type;
+
+      statusBox.textContent =
+        message;
+
+      statusBox.style.display =
+        'block';
+    }
+
+
+    function showError(message) {
+
+      setStatus(
+        'error',
+        message
+      );
+    }
+
+
+    function formatMoney(
+      amount,
+      currency
+    ) {
+
+      const number =
+        Number(amount);
+
+
+      if (!Number.isFinite(number)) {
+        return '-';
+      }
+
+
+      try {
+
+        return new Intl.NumberFormat(
+          'id-ID',
+          {
+            style: 'currency',
+            currency: currency || 'IDR',
+            maximumFractionDigits: 0
+          }
+        ).format(number);
+
+      } catch (error) {
+
+        return 'Rp' +
+          number.toLocaleString('id-ID');
+      }
+    }
+
+
+    function cleanupJsonp(
+      callbackName,
+      script
+    ) {
+
+      if (
+        script &&
+        script.parentNode
+      ) {
+        script.remove();
+      }
+
+
+      try {
+        delete window[callbackName];
+      } catch (error) {
+        // Safe to ignore.
+      }
+    }
+
+
+    /* =========================================================
+     * 16. PWA SERVICE WORKER
+     * ========================================================= */
+
+    if ('serviceWorker' in navigator) {
+
+      window.addEventListener(
+        'load',
+        function () {
+
+          navigator.serviceWorker
+            .register('./sw.js')
+            .catch(function () {
+              // Payment flow must still work even if PWA registration fails.
+            });
+        }
+      );
+    }
   </script>
 </body>
 </html>
