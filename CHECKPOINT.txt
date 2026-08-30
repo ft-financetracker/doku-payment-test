@@ -1,0 +1,32 @@
+SPP PAYMENT DEMO V1
+===================
+
+FITUR
+✅ PWA installable
+✅ Dashboard santri
+✅ Ringkasan tunggakan
+✅ Daftar tagihan
+✅ Riwayat pembayaran
+✅ Profil santri
+✅ Backend Apps Script
+✅ Spreadsheet dibuat otomatis
+✅ Payment Engine HMAC client
+✅ Secure payment link
+✅ Redirect ke FT Pay
+✅ Status PAID / EXPIRED dapat disinkronkan
+✅ Browser tidak menentukan nominal
+✅ Reset demo untuk test berulang
+
+DATA DEMO
+- Ahmad Fawwaz
+- NIS 2026001
+- SMP VIII A
+- SPP Rp1.700.000
+- Juli 2026 PAID sample
+- Agustus 2026 UNPAID
+- September 2026 UNPAID
+
+LOCK
+- Payment Engine V7.1 tidak diubah
+- FT Pay tidak diubah
+- DOKU flow tetap redirect

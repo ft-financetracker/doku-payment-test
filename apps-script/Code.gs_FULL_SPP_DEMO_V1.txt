@@ -1,0 +1,2040 @@
+/**
+ * ============================================================
+ * SPP PAYMENT DEMO — BACKEND V1
+ * ============================================================
+ *
+ * Arsitektur demo:
+ *
+ * GitHub Pages / PWA
+ *        ↓ JSONP
+ * Apps Script SPP Demo
+ *        ↓ HMAC-SHA256
+ * Finance Tracker Payment Engine V7.1
+ *        ↓
+ * DOKU Sandbox
+ *
+ * TUJUAN:
+ * - Membuktikan alur pembayaran SPP end-to-end.
+ * - Nominal tagihan TIDAK diambil dari browser.
+ * - Browser hanya mengirim bill_id.
+ *
+ * CATATAN:
+ * - Ini aplikasi DEMO / SANDBOX.
+ * - Payment Engine yang sudah LOCK tidak perlu diubah.
+ * - Client sementara memakai credential FINANCE_TRACKER
+ *   agar tidak perlu menambah client baru dulu.
+ *
+ * ============================================================
+ */
+
+
+/* ============================================================
+ * SECTION 1 — KONFIGURASI
+ * ============================================================
+ */
+
+const SPP_DEMO_CONFIG = {
+
+  appName:
+    'SPP Payment Demo',
+
+  timezone:
+    'Asia/Jakarta',
+
+  spreadsheetProperty:
+    'SPP_DEMO_SPREADSHEET_ID',
+
+  paymentSecretProperty:
+    'SPP_PAYMENT_CLIENT_SECRET',
+
+  paymentEngineUrl:
+    'https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec',
+
+  paymentClientId:
+    'FINANCE_TRACKER',
+
+  paymentSourceApp:
+    'FINANCE_TRACKER',
+
+  demoStudentId:
+    'STD-DEMO-001'
+};
+
+
+const SPP_SHEETS = {
+
+  students:
+    'STUDENTS',
+
+  bills:
+    'BILLS',
+
+  activity:
+    'ACTIVITY_LOG'
+};
+
+
+/* ============================================================
+ * SECTION 2 — SETUP DATABASE DEMO
+ * ============================================================
+ */
+
+/**
+ * Jalankan SEKALI setelah Code.gs dipasang.
+ *
+ * Function ini akan:
+ * 1. Membuat spreadsheet database demo otomatis.
+ * 2. Membuat sheet STUDENTS, BILLS, ACTIVITY_LOG.
+ * 3. Mengisi 1 santri demo + tagihan contoh.
+ *
+ * Setelah selesai, lihat Execution Log untuk URL spreadsheet.
+ */
+function setupSppPaymentDemoV1() {
+
+  const props =
+    PropertiesService
+      .getScriptProperties();
+
+
+  let spreadsheetId =
+    String(
+      props.getProperty(
+        SPP_DEMO_CONFIG.spreadsheetProperty
+      ) || ''
+    ).trim();
+
+
+  let spreadsheet;
+
+
+  if (spreadsheetId) {
+
+    spreadsheet =
+      SpreadsheetApp.openById(
+        spreadsheetId
+      );
+
+  } else {
+
+    spreadsheet =
+      SpreadsheetApp.create(
+        'SPP Payment Demo Database'
+      );
+
+
+    spreadsheet.setSpreadsheetTimeZone(
+      SPP_DEMO_CONFIG.timezone
+    );
+
+
+    spreadsheetId =
+      spreadsheet.getId();
+
+
+    props.setProperty(
+      SPP_DEMO_CONFIG.spreadsheetProperty,
+      spreadsheetId
+    );
+  }
+
+
+  createOrResetDemoSheets_(
+    spreadsheet
+  );
+
+
+  seedDemoData_(
+    spreadsheet
+  );
+
+
+  console.log(
+    '=============================='
+  );
+
+  console.log(
+    'SPP PAYMENT DEMO V1 READY'
+  );
+
+  console.log(
+    'Spreadsheet: ' +
+    spreadsheet.getUrl()
+  );
+
+  console.log(
+    'Spreadsheet ID: ' +
+    spreadsheetId
+  );
+
+  console.log(
+    'NEXT: pastikan Script Property ' +
+    SPP_DEMO_CONFIG.paymentSecretProperty +
+    ' sudah diisi.'
+  );
+}
+
+
+/**
+ * Mengecek konfigurasi sebelum test pembayaran.
+ */
+function preflightSppPaymentDemoV1() {
+
+  const props =
+    PropertiesService
+      .getScriptProperties();
+
+
+  const spreadsheetId =
+    String(
+      props.getProperty(
+        SPP_DEMO_CONFIG.spreadsheetProperty
+      ) || ''
+    ).trim();
+
+
+  const secret =
+    String(
+      props.getProperty(
+        SPP_DEMO_CONFIG.paymentSecretProperty
+      ) || ''
+    ).trim();
+
+
+  const checks = {
+
+    spreadsheet_id:
+      Boolean(
+        spreadsheetId
+      ),
+
+    payment_client_secret:
+      Boolean(
+        secret
+      ),
+
+    payment_engine_url:
+      /\/exec(?:\?.*)?$/.test(
+        SPP_DEMO_CONFIG.paymentEngineUrl
+      )
+  };
+
+
+  const passed =
+    Object.keys(
+      checks
+    ).every(
+      function (key) {
+        return checks[key] === true;
+      }
+    );
+
+
+  console.log(
+    '=============================='
+  );
+
+  console.log(
+    'SPP PAYMENT DEMO V1 PREFLIGHT'
+  );
+
+  console.log(
+    JSON.stringify(
+      checks,
+      null,
+      2
+    )
+  );
+
+  console.log(
+    'RESULT: ' +
+    (
+      passed
+        ? 'PASS'
+        : 'CHECK REQUIRED'
+    )
+  );
+
+
+  if (!passed) {
+
+    throw new Error(
+      'Konfigurasi SPP Payment Demo belum lengkap.'
+    );
+  }
+}
+
+
+/* ============================================================
+ * SECTION 3 — WEB APP ROUTER
+ * ============================================================
+ */
+
+/**
+ * Public GET API untuk frontend GitHub Pages.
+ *
+ * Endpoint:
+ * ?action=ping
+ * ?action=getDashboard
+ * ?action=createPayment&bill_id=...
+ * ?action=refreshStatus&bill_id=...
+ *
+ * Browser TIDAK mengirim nominal.
+ */
+function doGet(
+  e
+) {
+
+  try {
+
+    const params =
+      e && e.parameter
+        ? e.parameter
+        : {};
+
+
+    const action =
+      String(
+        params.action || ''
+      ).trim();
+
+
+    let result;
+
+
+    switch (action) {
+
+      case 'ping':
+
+        result = {
+          success: true,
+          message: 'SPP Payment Demo backend aktif.',
+          data: {
+            app_name:
+              SPP_DEMO_CONFIG.appName,
+            environment:
+              'SANDBOX'
+          }
+        };
+
+        break;
+
+
+      case 'getDashboard':
+
+        result =
+          getSppDemoDashboard_();
+
+        break;
+
+
+      case 'createPayment':
+
+        result =
+          createSppDemoPayment_(
+            params.bill_id
+          );
+
+        break;
+
+
+      case 'refreshStatus':
+
+        result =
+          refreshSppDemoPaymentStatus_(
+            params.bill_id
+          );
+
+        break;
+
+
+      default:
+
+        result = {
+          success: false,
+          code: 'UNKNOWN_ACTION',
+          message: 'Action tidak dikenali.'
+        };
+    }
+
+
+    return outputSppDemoResponse_(
+      result,
+      params.callback
+    );
+
+  } catch (error) {
+
+    return outputSppDemoResponse_(
+      {
+        success: false,
+        code: 'SPP_DEMO_ERROR',
+        message:
+          error &&
+          error.message
+            ? error.message
+            : 'Terjadi kesalahan pada backend demo.'
+      },
+      e &&
+      e.parameter
+        ? e.parameter.callback
+        : ''
+    );
+  }
+}
+
+
+/* ============================================================
+ * SECTION 4 — DASHBOARD
+ * ============================================================
+ */
+
+function getSppDemoDashboard_() {
+
+  const spreadsheet =
+    getSppDemoSpreadsheet_();
+
+
+  const student =
+    getDemoStudent_(
+      spreadsheet
+    );
+
+
+  const bills =
+    getStudentBills_(
+      spreadsheet,
+      student.student_id
+    );
+
+
+  const summary =
+    calculateBillSummary_(
+      bills
+    );
+
+
+  return {
+    success: true,
+    data: {
+      environment:
+        'SANDBOX',
+      student:
+        student,
+      summary:
+        summary,
+      bills:
+        bills
+    }
+  };
+}
+
+
+/* ============================================================
+ * SECTION 5 — CREATE PAYMENT
+ * ============================================================
+ */
+
+/**
+ * Browser hanya mengirim bill_id.
+ *
+ * Amount, customer dan description dibaca dari Spreadsheet.
+ */
+function createSppDemoPayment_(
+  billId
+) {
+
+  const cleanBillId =
+    String(
+      billId || ''
+    ).trim();
+
+
+  if (!cleanBillId) {
+
+    throw new Error(
+      'bill_id wajib diisi.'
+    );
+  }
+
+
+  const lock =
+    LockService.getScriptLock();
+
+
+  lock.waitLock(
+    20000
+  );
+
+
+  try {
+
+    const spreadsheet =
+      getSppDemoSpreadsheet_();
+
+
+    const billResult =
+      findBillRow_(
+        spreadsheet,
+        cleanBillId
+      );
+
+
+    if (!billResult) {
+
+      throw new Error(
+        'Tagihan tidak ditemukan.'
+      );
+    }
+
+
+    const bill =
+      billResult.data;
+
+
+    if (
+      bill.local_status === 'PAID'
+    ) {
+
+      return {
+        success: false,
+        code: 'BILL_ALREADY_PAID',
+        message: 'Tagihan ini sudah lunas.'
+      };
+    }
+
+
+    /*
+     * Kalau link sebelumnya masih aktif, cukup gunakan ulang.
+     * Tidak membuat PAYMENT_REQUEST baru.
+     */
+    if (
+      bill.payment_link &&
+      (
+        bill.local_status ===
+          'PAYMENT_CREATED' ||
+        bill.local_status ===
+          'OPEN'
+      )
+    ) {
+
+      return {
+        success: true,
+        message: 'Payment link aktif digunakan kembali.',
+        data: {
+          bill_id:
+            bill.bill_id,
+          payment_link:
+            bill.payment_link,
+          local_status:
+            bill.local_status,
+          reused:
+            true
+        }
+      };
+    }
+
+
+    const student =
+      getStudentById_(
+        spreadsheet,
+        bill.student_id
+      );
+
+
+    if (!student) {
+
+      throw new Error(
+        'Data santri untuk tagihan tidak ditemukan.'
+      );
+    }
+
+
+    const currentAttempt =
+      Number(
+        bill.attempt_count || 0
+      ) + 1;
+
+
+    const runId =
+      getOrCreateDemoRunId_();
+
+
+    const referenceNumber =
+      [
+        'SPPDEMO',
+        runId,
+        bill.bill_id,
+        'A' + currentAttempt
+      ].join(
+        '-'
+      );
+
+
+    const paymentResult =
+      createPaymentRequestToEngine_(
+        {
+          referenceNumber:
+            referenceNumber,
+
+          customerId:
+            student.student_id,
+
+          customerName:
+            student.name,
+
+          description:
+            bill.description +
+            ' - ' +
+            bill.period,
+
+          amount:
+            Number(
+              bill.amount
+            ),
+
+          notes:
+            'SPP Payment Demo Sandbox'
+        }
+      );
+
+
+    const paymentToken =
+      extractTokenFromPaymentLink_(
+        paymentResult.payment_link
+      );
+
+
+    const nowIso =
+      new Date()
+        .toISOString();
+
+
+    updateBillRow_(
+      billResult,
+      {
+        local_status:
+          'PAYMENT_CREATED',
+
+        payment_request_id:
+          paymentResult.payment_request_id || '',
+
+        payment_reference:
+          referenceNumber,
+
+        payment_link:
+          paymentResult.payment_link || '',
+
+        payment_token:
+          paymentToken,
+
+        token_expires_at:
+          paymentResult.token_expires_at || '',
+
+        attempt_count:
+          currentAttempt,
+
+        last_checked_at:
+          '',
+
+        updated_at:
+          nowIso
+      }
+    );
+
+
+    appendActivityLog_(
+      spreadsheet,
+      {
+        action:
+          'CREATE_PAYMENT',
+        bill_id:
+          bill.bill_id,
+        detail:
+          referenceNumber,
+        status:
+          'PAYMENT_CREATED'
+      }
+    );
+
+
+    return {
+      success: true,
+      message: 'Link pembayaran berhasil dibuat.',
+      data: {
+        bill_id:
+          bill.bill_id,
+        payment_request_id:
+          paymentResult.payment_request_id || '',
+        payment_link:
+          paymentResult.payment_link,
+        local_status:
+          'PAYMENT_CREATED',
+        token_expires_at:
+          paymentResult.token_expires_at || '',
+        reused:
+          false
+      }
+    };
+
+  } finally {
+
+    lock.releaseLock();
+  }
+}
+
+
+/* ============================================================
+ * SECTION 6 — REFRESH PAYMENT STATUS
+ * ============================================================
+ */
+
+function refreshSppDemoPaymentStatus_(
+  billId
+) {
+
+  const cleanBillId =
+    String(
+      billId || ''
+    ).trim();
+
+
+  if (!cleanBillId) {
+
+    throw new Error(
+      'bill_id wajib diisi.'
+    );
+  }
+
+
+  const spreadsheet =
+    getSppDemoSpreadsheet_();
+
+
+  const billResult =
+    findBillRow_(
+      spreadsheet,
+      cleanBillId
+    );
+
+
+  if (!billResult) {
+
+    throw new Error(
+      'Tagihan tidak ditemukan.'
+    );
+  }
+
+
+  const bill =
+    billResult.data;
+
+
+  if (
+    bill.local_status === 'PAID'
+  ) {
+
+    return {
+      success: true,
+      message: 'Tagihan sudah lunas.',
+      data: {
+        bill_id:
+          bill.bill_id,
+        local_status:
+          'PAID',
+        paid_at:
+          bill.paid_at || ''
+      }
+    };
+  }
+
+
+  if (!bill.payment_token) {
+
+    return {
+      success: true,
+      message: 'Belum ada payment link untuk tagihan ini.',
+      data: {
+        bill_id:
+          bill.bill_id,
+        local_status:
+          bill.local_status || 'UNPAID'
+      }
+    };
+  }
+
+
+  const secureStatus =
+    getSecurePaymentStatusFromEngine_(
+      bill.payment_token
+    );
+
+
+  const engineStatus =
+    String(
+      secureStatus.status || ''
+    ).toUpperCase();
+
+
+  let localStatus =
+    'PAYMENT_CREATED';
+
+
+  if (
+    engineStatus === 'PAID' ||
+    engineStatus === 'SUCCESS'
+  ) {
+
+    localStatus =
+      'PAID';
+
+  } else if (
+    engineStatus === 'EXPIRED' ||
+    engineStatus === 'CANCELLED'
+  ) {
+
+    localStatus =
+      'EXPIRED';
+  }
+
+
+  const nowIso =
+    new Date()
+      .toISOString();
+
+
+  const patch = {
+
+    local_status:
+      localStatus,
+
+    last_checked_at:
+      nowIso,
+
+    updated_at:
+      nowIso
+  };
+
+
+  if (
+    localStatus === 'PAID'
+  ) {
+
+    patch.paid_at =
+      secureStatus.paid_at ||
+      nowIso;
+  }
+
+
+  updateBillRow_(
+    billResult,
+    patch
+  );
+
+
+  appendActivityLog_(
+    spreadsheet,
+    {
+      action:
+        'REFRESH_STATUS',
+      bill_id:
+        bill.bill_id,
+      detail:
+        engineStatus || 'UNKNOWN',
+      status:
+        localStatus
+    }
+  );
+
+
+  return {
+    success: true,
+    message: 'Status pembayaran diperbarui.',
+    data: {
+      bill_id:
+        bill.bill_id,
+      local_status:
+        localStatus,
+      engine_status:
+        engineStatus,
+      paid_at:
+        patch.paid_at || bill.paid_at || ''
+    }
+  };
+}
+
+
+/* ============================================================
+ * SECTION 7 — PAYMENT ENGINE CLIENT
+ * ============================================================
+ */
+
+function createPaymentRequestToEngine_(
+  input
+) {
+
+  const secret =
+    getSppPaymentClientSecret_();
+
+
+  const timestamp =
+    new Date()
+      .toISOString();
+
+
+  const nonce =
+    Utilities
+      .getUuid()
+      .replace(
+        /-/g,
+        ''
+      );
+
+
+  const payload = {
+
+    source_app:
+      SPP_DEMO_CONFIG.paymentSourceApp,
+
+    reference_number:
+      String(
+        input.referenceNumber
+      ).trim(),
+
+    customer_id:
+      String(
+        input.customerId || ''
+      ).trim(),
+
+    customer_name:
+      String(
+        input.customerName
+      ).trim(),
+
+    description:
+      String(
+        input.description
+      ).trim(),
+
+    amount:
+      Number(
+        input.amount
+      ),
+
+    notes:
+      String(
+        input.notes || ''
+      ).trim()
+  };
+
+
+  const payloadJson =
+    JSON.stringify(
+      payload
+    );
+
+
+  const action =
+    'createPaymentRequest';
+
+
+  const signature =
+    createSppPaymentSignature_(
+      action,
+      SPP_DEMO_CONFIG.paymentClientId,
+      timestamp,
+      nonce,
+      payloadJson,
+      secret
+    );
+
+
+  const requestBody = {
+
+    action:
+      action,
+
+    client_id:
+      SPP_DEMO_CONFIG.paymentClientId,
+
+    timestamp:
+      timestamp,
+
+    nonce:
+      nonce,
+
+    payload_json:
+      payloadJson,
+
+    signature:
+      signature
+  };
+
+
+  const response =
+    UrlFetchApp.fetch(
+      SPP_DEMO_CONFIG.paymentEngineUrl,
+      {
+        method:
+          'post',
+
+        contentType:
+          'application/json',
+
+        payload:
+          JSON.stringify(
+            requestBody
+          ),
+
+        muteHttpExceptions:
+          true
+      }
+    );
+
+
+  return parsePaymentEngineResponse_(
+    response
+  );
+}
+
+
+function createSppPaymentSignature_(
+  action,
+  clientId,
+  timestamp,
+  nonce,
+  payloadJson,
+  secret
+) {
+
+  const rawToSign =
+    'Action:' +
+    action +
+    '\n' +
+
+    'Client-Id:' +
+    clientId +
+    '\n' +
+
+    'Request-Timestamp:' +
+    timestamp +
+    '\n' +
+
+    'Nonce:' +
+    nonce +
+    '\n' +
+
+    'Payload:' +
+    payloadJson;
+
+
+  const signatureBytes =
+    Utilities.computeHmacSha256Signature(
+      rawToSign,
+      secret,
+      Utilities.Charset.UTF_8
+    );
+
+
+  return (
+    'HMACSHA256=' +
+    Utilities.base64Encode(
+      signatureBytes
+    )
+  );
+}
+
+
+function parsePaymentEngineResponse_(
+  response
+) {
+
+  const responseCode =
+    response.getResponseCode();
+
+
+  const responseText =
+    response.getContentText();
+
+
+  if (
+    /^\s*<!DOCTYPE html>|^\s*<html/i.test(
+      responseText
+    )
+  ) {
+
+    throw new Error(
+      'Payment Engine mengembalikan HTML Google, bukan JSON API.'
+    );
+  }
+
+
+  let parsed;
+
+
+  try {
+
+    parsed =
+      JSON.parse(
+        responseText
+      );
+
+  } catch (error) {
+
+    throw new Error(
+      'Response Payment Engine bukan JSON valid.'
+    );
+  }
+
+
+  if (
+    responseCode !== 200 ||
+    parsed.success !== true
+  ) {
+
+    throw new Error(
+      parsed.message ||
+      (
+        'Payment Engine gagal. HTTP ' +
+        responseCode
+      )
+    );
+  }
+
+
+  return parsed.data;
+}
+
+
+function getSecurePaymentStatusFromEngine_(
+  token
+) {
+
+  const url =
+    SPP_DEMO_CONFIG.paymentEngineUrl +
+    '?action=getSecurePayment&token=' +
+    encodeURIComponent(
+      token
+    ) +
+    '&_=' +
+    Date.now();
+
+
+  const response =
+    UrlFetchApp.fetch(
+      url,
+      {
+        method:
+          'get',
+        muteHttpExceptions:
+          true
+      }
+    );
+
+
+  const responseText =
+    response.getContentText();
+
+
+  let parsed;
+
+
+  try {
+
+    parsed =
+      JSON.parse(
+        responseText
+      );
+
+  } catch (error) {
+
+    throw new Error(
+      'Status Payment Engine tidak dapat dibaca.'
+    );
+  }
+
+
+  if (
+    parsed.success !== true
+  ) {
+
+    throw new Error(
+      parsed.message ||
+      'Gagal membaca status pembayaran.'
+    );
+  }
+
+
+  return parsed.data;
+}
+
+
+/* ============================================================
+ * SECTION 8 — SPREADSHEET HELPERS
+ * ============================================================
+ */
+
+function getSppDemoSpreadsheet_() {
+
+  const spreadsheetId =
+    String(
+      PropertiesService
+        .getScriptProperties()
+        .getProperty(
+          SPP_DEMO_CONFIG.spreadsheetProperty
+        ) || ''
+    ).trim();
+
+
+  if (!spreadsheetId) {
+
+    throw new Error(
+      'Database demo belum dibuat. Jalankan setupSppPaymentDemoV1().'
+    );
+  }
+
+
+  return SpreadsheetApp.openById(
+    spreadsheetId
+  );
+}
+
+
+function createOrResetDemoSheets_(
+  spreadsheet
+) {
+
+  const sheetDefinitions = {
+
+    STUDENTS: [
+      'student_id',
+      'nis',
+      'name',
+      'class_name',
+      'unit',
+      'guardian_name',
+      'guardian_phone',
+      'status'
+    ],
+
+    BILLS: [
+      'bill_id',
+      'student_id',
+      'period',
+      'description',
+      'amount',
+      'due_date',
+      'local_status',
+      'payment_request_id',
+      'payment_reference',
+      'payment_link',
+      'payment_token',
+      'token_expires_at',
+      'attempt_count',
+      'paid_at',
+      'last_checked_at',
+      'created_at',
+      'updated_at'
+    ],
+
+    ACTIVITY_LOG: [
+      'logged_at',
+      'action',
+      'bill_id',
+      'detail',
+      'status'
+    ]
+  };
+
+
+  Object.keys(
+    sheetDefinitions
+  ).forEach(
+    function (sheetName) {
+
+      let sheet =
+        spreadsheet.getSheetByName(
+          sheetName
+        );
+
+
+      if (!sheet) {
+
+        sheet =
+          spreadsheet.insertSheet(
+            sheetName
+          );
+      }
+
+
+      sheet.clear();
+
+
+      const headers =
+        sheetDefinitions[
+          sheetName
+        ];
+
+
+      sheet
+        .getRange(
+          1,
+          1,
+          1,
+          headers.length
+        )
+        .setValues(
+          [
+            headers
+          ]
+        );
+
+
+      sheet
+        .getRange(
+          1,
+          1,
+          1,
+          headers.length
+        )
+        .setFontWeight(
+          'bold'
+        );
+
+
+      sheet.setFrozenRows(
+        1
+      );
+    }
+  );
+}
+
+
+function seedDemoData_(
+  spreadsheet
+) {
+
+  const nowIso =
+    new Date()
+      .toISOString();
+
+
+  const studentsSheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.students
+    );
+
+
+  studentsSheet
+    .getRange(
+      2,
+      1,
+      1,
+      8
+    )
+    .setValues(
+      [
+        [
+          SPP_DEMO_CONFIG.demoStudentId,
+          '2026001',
+          'Ahmad Fawwaz',
+          'VIII A',
+          'SMP',
+          'Abdullah',
+          '0812-0000-0001',
+          'AKTIF'
+        ]
+      ]
+    );
+
+
+  const billsSheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.bills
+    );
+
+
+  const rows = [
+    [
+      'BILL-2026-07',
+      SPP_DEMO_CONFIG.demoStudentId,
+      'Juli 2026',
+      'SPP Bulanan',
+      1700000,
+      '2026-07-10',
+      'PAID',
+      'DEMO-PAID-SAMPLE',
+      'SPPDEMO-SAMPLE-PAID',
+      '',
+      '',
+      '',
+      0,
+      '2026-07-08T03:15:00.000Z',
+      '2026-07-08T03:15:00.000Z',
+      nowIso,
+      nowIso
+    ],
+    [
+      'BILL-2026-08',
+      SPP_DEMO_CONFIG.demoStudentId,
+      'Agustus 2026',
+      'SPP Bulanan',
+      1700000,
+      '2026-08-10',
+      'UNPAID',
+      '',
+      '',
+      '',
+      '',
+      '',
+      0,
+      '',
+      '',
+      nowIso,
+      nowIso
+    ],
+    [
+      'BILL-2026-09',
+      SPP_DEMO_CONFIG.demoStudentId,
+      'September 2026',
+      'SPP Bulanan',
+      1700000,
+      '2026-09-10',
+      'UNPAID',
+      '',
+      '',
+      '',
+      '',
+      '',
+      0,
+      '',
+      '',
+      nowIso,
+      nowIso
+    ]
+  ];
+
+
+  billsSheet
+    .getRange(
+      2,
+      1,
+      rows.length,
+      rows[0].length
+    )
+    .setValues(
+      rows
+    );
+
+
+  getOrCreateDemoRunId_(
+    true
+  );
+}
+
+
+function getDemoStudent_(
+  spreadsheet
+) {
+
+  const student =
+    getStudentById_(
+      spreadsheet,
+      SPP_DEMO_CONFIG.demoStudentId
+    );
+
+
+  if (!student) {
+
+    throw new Error(
+      'Santri demo tidak ditemukan.'
+    );
+  }
+
+
+  return student;
+}
+
+
+function getStudentById_(
+  spreadsheet,
+  studentId
+) {
+
+  const sheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.students
+    );
+
+
+  const objects =
+    sheetToObjects_(
+      sheet
+    );
+
+
+  return (
+    objects.find(
+      function (row) {
+        return (
+          String(
+            row.student_id
+          ) ===
+          String(
+            studentId
+          )
+        );
+      }
+    ) ||
+    null
+  );
+}
+
+
+function getStudentBills_(
+  spreadsheet,
+  studentId
+) {
+
+  const sheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.bills
+    );
+
+
+  const objects =
+    sheetToObjects_(
+      sheet
+    );
+
+
+  return objects
+    .filter(
+      function (row) {
+        return (
+          String(
+            row.student_id
+          ) ===
+          String(
+            studentId
+          )
+        );
+      }
+    )
+    .sort(
+      function (a, b) {
+        return (
+          String(
+            b.due_date
+          ).localeCompare(
+            String(
+              a.due_date
+            )
+          )
+        );
+      }
+    );
+}
+
+
+function findBillRow_(
+  spreadsheet,
+  billId
+) {
+
+  const sheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.bills
+    );
+
+
+  const values =
+    sheet.getDataRange()
+      .getValues();
+
+
+  if (
+    values.length < 2
+  ) {
+
+    return null;
+  }
+
+
+  const headers =
+    values[0];
+
+
+  for (
+    let rowIndex = 1;
+    rowIndex < values.length;
+    rowIndex++
+  ) {
+
+    const row =
+      values[rowIndex];
+
+
+    if (
+      String(
+        row[0]
+      ) ===
+      String(
+        billId
+      )
+    ) {
+
+      const data = {};
+
+
+      headers.forEach(
+        function (header, columnIndex) {
+          data[
+            header
+          ] =
+            normalizeSheetValue_(
+              row[
+                columnIndex
+              ]
+            );
+        }
+      );
+
+
+      return {
+        sheet:
+          sheet,
+        rowNumber:
+          rowIndex + 1,
+        headers:
+          headers,
+        data:
+          data
+      };
+    }
+  }
+
+
+  return null;
+}
+
+
+function updateBillRow_(
+  billResult,
+  patch
+) {
+
+  const rowValues =
+    billResult.headers.map(
+      function (header) {
+
+        if (
+          Object.prototype
+            .hasOwnProperty
+            .call(
+              patch,
+              header
+            )
+        ) {
+
+          return patch[
+            header
+          ];
+        }
+
+
+        return billResult.data[
+          header
+        ];
+      }
+    );
+
+
+  billResult.sheet
+    .getRange(
+      billResult.rowNumber,
+      1,
+      1,
+      rowValues.length
+    )
+    .setValues(
+      [
+        rowValues
+      ]
+    );
+}
+
+
+function sheetToObjects_(
+  sheet
+) {
+
+  const values =
+    sheet.getDataRange()
+      .getValues();
+
+
+  if (
+    values.length < 2
+  ) {
+
+    return [];
+  }
+
+
+  const headers =
+    values[0];
+
+
+  return values
+    .slice(
+      1
+    )
+    .filter(
+      function (row) {
+        return row.some(
+          function (cell) {
+            return (
+              cell !== '' &&
+              cell !== null
+            );
+          }
+        );
+      }
+    )
+    .map(
+      function (row) {
+
+        const object = {};
+
+
+        headers.forEach(
+          function (header, index) {
+
+            object[
+              header
+            ] =
+              normalizeSheetValue_(
+                row[
+                  index
+                ]
+              );
+          }
+        );
+
+
+        return object;
+      }
+    );
+}
+
+
+function normalizeSheetValue_(
+  value
+) {
+
+  if (
+    Object.prototype
+      .toString
+      .call(
+        value
+      ) ===
+    '[object Date]'
+  ) {
+
+    return value.toISOString();
+  }
+
+
+  return value;
+}
+
+
+function calculateBillSummary_(
+  bills
+) {
+
+  let totalOutstanding =
+    0;
+
+
+  let unpaidCount =
+    0;
+
+
+  let paidCount =
+    0;
+
+
+  bills.forEach(
+    function (bill) {
+
+      const status =
+        String(
+          bill.local_status || ''
+        ).toUpperCase();
+
+
+      if (
+        status === 'PAID'
+      ) {
+
+        paidCount++;
+
+      } else {
+
+        totalOutstanding +=
+          Number(
+            bill.amount || 0
+          );
+
+
+        unpaidCount++;
+      }
+    }
+  );
+
+
+  return {
+    total_outstanding:
+      totalOutstanding,
+    unpaid_count:
+      unpaidCount,
+    paid_count:
+      paidCount,
+    total_bills:
+      bills.length
+  };
+}
+
+
+function appendActivityLog_(
+  spreadsheet,
+  entry
+) {
+
+  const sheet =
+    spreadsheet.getSheetByName(
+      SPP_SHEETS.activity
+    );
+
+
+  sheet.appendRow(
+    [
+      new Date().toISOString(),
+      entry.action || '',
+      entry.bill_id || '',
+      entry.detail || '',
+      entry.status || ''
+    ]
+  );
+}
+
+
+/* ============================================================
+ * SECTION 9 — UTILITIES
+ * ============================================================
+ */
+
+function getSppPaymentClientSecret_() {
+
+  const secret =
+    String(
+      PropertiesService
+        .getScriptProperties()
+        .getProperty(
+          SPP_DEMO_CONFIG.paymentSecretProperty
+        ) || ''
+    ).trim();
+
+
+  if (!secret) {
+
+    throw new Error(
+      SPP_DEMO_CONFIG.paymentSecretProperty +
+      ' belum tersedia di Script Properties.'
+    );
+  }
+
+
+  return secret;
+}
+
+
+function getOrCreateDemoRunId_(
+  forceNew
+) {
+
+  const props =
+    PropertiesService
+      .getScriptProperties();
+
+
+  let runId =
+    String(
+      props.getProperty(
+        'SPP_DEMO_RUN_ID'
+      ) || ''
+    ).trim();
+
+
+  if (
+    forceNew ||
+    !runId
+  ) {
+
+    runId =
+      Utilities.formatDate(
+        new Date(),
+        SPP_DEMO_CONFIG.timezone,
+        'yyyyMMddHHmmss'
+      ) +
+      Utilities
+        .getUuid()
+        .replace(
+          /-/g,
+          ''
+        )
+        .substring(
+          0,
+          4
+        )
+        .toUpperCase();
+
+
+    props.setProperty(
+      'SPP_DEMO_RUN_ID',
+      runId
+    );
+  }
+
+
+  return runId;
+}
+
+
+function extractTokenFromPaymentLink_(
+  paymentLink
+) {
+
+  const link =
+    String(
+      paymentLink || ''
+    );
+
+
+  const match =
+    link.match(
+      /[#?&]token=([A-Fa-f0-9]{64,256})/
+    );
+
+
+  return match
+    ? match[1]
+    : '';
+}
+
+
+function outputSppDemoResponse_(
+  payload,
+  callback
+) {
+
+  const json =
+    JSON.stringify(
+      payload
+    );
+
+
+  const cleanCallback =
+    String(
+      callback || ''
+    ).trim();
+
+
+  if (
+    cleanCallback &&
+    /^[A-Za-z_$][0-9A-Za-z_$\.]{0,80}$/.test(
+      cleanCallback
+    )
+  ) {
+
+    return ContentService
+      .createTextOutput(
+        cleanCallback +
+        '(' +
+        json +
+        ');'
+      )
+      .setMimeType(
+        ContentService.MimeType.JAVASCRIPT
+      );
+  }
+
+
+  return ContentService
+    .createTextOutput(
+      json
+    )
+    .setMimeType(
+      ContentService.MimeType.JSON
+    );
+}
+
+
+/* ============================================================
+ * SECTION 10 — TEST & RESET DEMO
+ * ============================================================
+ */
+
+/**
+ * Test backend SPP langsung dari Apps Script.
+ *
+ * Membuat payment link untuk tagihan Agustus 2026.
+ */
+function testSppDemoCreatePaymentV1() {
+
+  const result =
+    createSppDemoPayment_(
+      'BILL-2026-08'
+    );
+
+
+  console.log(
+    JSON.stringify(
+      result,
+      null,
+      2
+    )
+  );
+}
+
+
+/**
+ * Reset transaksi demo agar bisa dipakai test ulang.
+ *
+ * Catatan:
+ * - Data santri tetap.
+ * - Juli tetap PAID sample.
+ * - Agustus & September kembali UNPAID.
+ * - Run ID diganti supaya reference ke Payment Engine baru.
+ */
+function resetSppDemoTransactionsV1() {
+
+  const spreadsheet =
+    getSppDemoSpreadsheet_();
+
+
+  seedDemoData_(
+    spreadsheet
+  );
+
+
+  console.log(
+    'SPP Demo transactions reset.'
+  );
+
+  console.log(
+    'Run ID baru: ' +
+    getOrCreateDemoRunId_()
+  );
+}
