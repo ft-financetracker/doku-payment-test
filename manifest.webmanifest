@@ -1,26 +1,12 @@
 {
-  "id": "./",
-  "name": "Finance Tracker Pay",
-  "short_name": "FT Pay",
-  "description": "Secure payment companion for Finance Tracker with verified server-side amounts.",
+  "name": "SPP Pay Demo",
+  "short_name": "SPP Pay",
+  "description": "Sandbox demo pembayaran SPP dengan Finance Tracker Payment Engine.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "orientation": "any",
-  "background_color": "#0B132B",
+  "background_color": "#FFFFFF",
   "theme_color": "#0B132B",
-  "lang": "id-ID",
-  "dir": "ltr",
-  "categories": [
-    "finance",
-    "business",
-    "productivity"
-  ],
-  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icons/icon-192.png",

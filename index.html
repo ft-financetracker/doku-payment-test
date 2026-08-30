@@ -2,853 +2,226 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="referrer" content="no-referrer">
-  <meta name="description" content="Finance Tracker Pay — secure payment portal.">
-  <title>Finance Tracker Pay</title>
-  <meta name="theme-color" content="#0B132B">
-  <meta name="color-scheme" content="dark">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="FT Pay">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-  <style>
-    :root{
-      --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
-      --green:#B6FF00;--green-soft:#D3FF42;--ink:#EAF0FF;--muted:#B3C1DE;--muted-2:#8195BE;
-      --line:rgba(125,154,214,.16);--line-2:rgba(125,154,214,.10);--shadow:0 28px 80px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    html{min-height:100%;background:var(--navy)}
-    body{
-      margin:0;min-height:100vh;min-height:100dvh;padding:26px;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--ink);overflow-x:hidden;
-      background:
-        radial-gradient(900px 620px at 100% -10%,rgba(30,58,138,.42),transparent 60%),
-        radial-gradient(720px 540px at -10% 110%,rgba(30,58,138,.26),transparent 58%),
-        linear-gradient(145deg,#071126 0%,#0B132B 52%,#08142F 100%);
-    }
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.34;background:
-      linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.26%,transparent 77.38%),
-      repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.08) 25px 26px);
-      mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 100%)}
-    .shell{width:min(100%,1180px);margin:0 auto;position:relative;z-index:1}
-    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{width:46px;height:46px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
-    .brand-name{font-size:16px;font-weight:900;letter-spacing:-.02em;color:#fff;white-space:nowrap}
-    .brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#97A9D0;font-weight:800;margin-top:3px}
-    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.32);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
-    .env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
-    .workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);gap:24px;align-items:stretch}
-    .panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.92));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
-    .panel:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .intro{padding:42px 34px 30px;min-height:580px}
-    .intro:after{content:"";position:absolute;left:34px;bottom:30px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
-    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}.eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
-    .intro h1{margin:0;max-width:560px;font-size:clamp(34px,4.8vw,56px);line-height:1.02;letter-spacing:-.045em;color:#fff}
-    .intro h1 .accent{color:var(--green)}
-    .intro-copy{max-width:560px;margin:20px 0 0;color:var(--muted);font-size:15px;line-height:1.72}
-    .security-list{display:grid;gap:10px;margin-top:28px}
-    .security-item{display:grid;grid-template-columns:38px minmax(0,1fr);gap:12px;align-items:start;padding:12px 14px;border:1px solid var(--line-2);border-radius:16px;background:rgba(255,255,255,.022);min-width:0}
-    .security-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green)}
-    .security-icon svg{width:18px;height:18px}
-    .security-copy{min-width:0}
-    .security-title{margin:1px 0 4px;font-size:13px;font-weight:900;color:#EDF3FF}
-    .security-text{margin:0;color:#90A3CA;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
-    .pay-card{padding:24px}
-    .card-head{padding:4px 4px 18px;border-bottom:1px solid var(--line)}
-    .card-kicker{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
-    .card-title{margin:0;color:#fff;font-size:22px;line-height:1.1;letter-spacing:-.03em}
-    .card-subtitle{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.68;max-width:430px}
-    .secure-note{display:flex;align-items:center;gap:10px;margin-top:16px;color:#C4D0E6;font-size:11px;line-height:1.55}
-    .secure-note-icon{width:24px;height:24px;display:grid;place-items:center;border-radius:8px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.18);color:var(--green);flex:0 0 24px}
-    .detail{display:none;margin-top:18px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
-    .detail-row{display:grid;grid-template-columns:135px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}
-    .detail-row:last-child{border-bottom:0}
-    .detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
-    .detail-label{font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}
-    .detail-value{font-size:14px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}
-    .amount-value{font-size:22px;line-height:1.05;font-weight:950;letter-spacing:-.03em;color:var(--green-soft)}
-    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-    .status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
-    .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}
-    .status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}
-    .status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
-    .empty{display:none;margin-top:18px;padding:28px 18px;border-radius:20px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}
-    .empty-icon{width:48px;height:48px;margin:0 auto 12px;display:grid;place-items:center;border-radius:14px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}
-    .empty-title{font-size:14px;font-weight:900;color:#ECF2FF}
-    .empty-copy{max-width:360px;margin:6px auto 0;font-size:11px;line-height:1.65;color:#8B9CC1}
-    .cta{width:100%;margin-top:16px;min-height:54px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:15px;font-weight:950;letter-spacing:-.01em;cursor:pointer;box-shadow:0 13px 30px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}.cta:hover{transform:translateY(-1px);filter:brightness(1.04)}.cta:active{transform:translateY(0)}.cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}.cta svg{width:17px;height:17px}
-    .status-box{display:none;margin-top:12px;padding:13px 14px;border-radius:14px;font-size:12px;line-height:1.6;border:1px solid transparent}
-    .status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}
-    .status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}
-    .status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
-    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:10px}.footer strong{color:#95A8CF;font-weight:850}
-    .install-btn{display:none;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#D7E4FA;border-radius:14px;padding:11px 13px;font-size:12px;font-weight:850;cursor:pointer}
-    .install-btn.show{display:inline-flex;align-items:center;gap:8px}
-    @media (max-width: 980px){
-      .workspace{grid-template-columns:1fr}
-      .intro{min-height:auto}
-    }
-    @media (max-width: 720px){
-      body{padding:18px}
-      .brandbar{margin-bottom:18px}
-      .brand-mark{width:42px;height:42px}
-      .brand-name{font-size:15px}
-      .intro,.pay-card{padding:22px}
-      .intro h1{font-size:clamp(30px,10vw,46px)}
-      .intro-copy,.card-subtitle{font-size:14px}
-      .security-item{grid-template-columns:36px minmax(0,1fr);padding:11px 12px}
-      .security-icon{width:36px;height:36px}
-      .detail-row{grid-template-columns:1fr;gap:8px}
-      .detail-value{text-align:left}
-      .amount-value{font-size:20px}
-      .footer{flex-direction:column;align-items:flex-start}
-    }
-  </style>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#0B132B"
+  >
+
+  <meta
+    name="description"
+    content="SPP Payment Demo — Sandbox"
+  >
+
+  <title>SPP Pay Demo</title>
+
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="./icons/icon-192.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="./css/app.css"
+  >
 </head>
+
 <body>
-  <main class="shell">
-    <header class="brandbar">
+
+  <!-- ======================================================
+       APP SHELL
+       ====================================================== -->
+
+  <div
+    id="app"
+    class="app-shell"
+  >
+
+    <header class="topbar">
+
       <div class="brand">
-        <img class="brand-mark" src="./assets/ft-pay-mark.svg" alt="FT Pay">
-        <div>
-          <div class="brand-name">Finance Tracker Pay</div>
-          <div class="brand-sub">Secure Payment Gateway</div>
+
+        <div class="brand-mark">
+          S
         </div>
+
+        <div>
+
+          <div class="brand-title">
+            SPP Pay
+          </div>
+
+          <div class="brand-subtitle">
+            Finance Tracker Demo
+          </div>
+
+        </div>
+
       </div>
-      <div class="env-badge"><span class="env-dot"></span> Sandbox</div>
+
+      <span class="sandbox-badge">
+        SANDBOX
+      </span>
+
     </header>
 
-    <div class="workspace">
-      <section class="panel intro" aria-labelledby="introTitle">
-        <div class="eyebrow">Finance Tracker Payment</div>
-        <h1 id="introTitle">Pembayaran aman.<br><span class="accent">Nominal terverifikasi.</span></h1>
-        <p class="intro-copy">FT Pay memisahkan data tagihan dari browser. Customer hanya menerima tautan pembayaran, sedangkan identitas, nominal, dan status tetap diverifikasi oleh backend Finance Tracker.</p>
 
-        <div class="security-list" aria-label="Payment security overview">
-          <div class="security-item">
-            <div class="security-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/>
-                <path d="m9.5 12 1.8 1.8L15 10.2"/>
-              </svg>
-            </div>
-            <div class="security-copy">
-              <div class="security-title">Secure Token</div>
-              <p class="security-text">Akses pembayaran memakai token aman, bukan nominal yang bisa diubah dari browser.</p>
-            </div>
-          </div>
+    <main
+      id="page"
+      class="page"
+    >
+      <!-- Rendered by app.js -->
+    </main>
 
-          <div class="security-item">
-            <div class="security-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="6" width="18" height="12" rx="2"/>
-                <path d="M7 10h10M7 14h5"/>
-              </svg>
-            </div>
-            <div class="security-copy">
-              <div class="security-title">Server-side Amount</div>
-              <p class="security-text">Nominal resmi dibaca dari PAYMENT_REQUEST dan tidak dapat diedit customer.</p>
-            </div>
-          </div>
 
-          <div class="security-item">
-            <div class="security-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20V10"/>
-                <path d="m7 15 5 5 5-5"/>
-                <path d="M7 4h10"/>
-              </svg>
-            </div>
-            <div class="security-copy">
-              <div class="security-title">Audit Trail</div>
-              <p class="security-text">Perubahan status tercatat otomatis pada PAYMENT_LOG, PAYMENT_REQUEST, dan status history.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <nav class="bottom-nav">
 
-      <section class="panel pay-card" aria-labelledby="paymentTitle">
-        <div class="card-head">
-          <div class="card-kicker">Verified Payment</div>
-          <h2 id="paymentTitle" class="card-title">Detail pembayaran</h2>
-          <p class="card-subtitle">Data di bawah ini dibaca langsung dari backend Finance Tracker. Pastikan nama dan nominal sesuai sebelum melanjutkan.</p>
-          <div class="secure-note"><span class="secure-note-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/></svg></span><span>Secure token • server-side amount • audit trail</span></div>
-        </div>
+      <button
+        class="nav-item active"
+        data-page="home"
+        type="button"
+      >
+        <span class="nav-icon">⌂</span>
+        <span>Beranda</span>
+      </button>
 
-        <div id="paymentDetail" class="detail">
-          <div class="detail-row"><span class="detail-label">Referensi</span><span id="referenceNumber" class="detail-value">-</span></div>
-          <div class="detail-row"><span class="detail-label">Customer</span><span id="customerName" class="detail-value">-</span></div>
-          <div class="detail-row"><span class="detail-label">Keterangan</span><span id="description" class="detail-value">-</span></div>
-          <div class="detail-row amount-row"><span class="detail-label">Nominal Resmi</span><span id="amount" class="detail-value amount-value">-</span></div>
-          <div class="detail-row"><span class="detail-label">Status</span><span id="paymentStatus" class="status-pill">-</span></div>
-        </div>
+      <button
+        class="nav-item"
+        data-page="bills"
+        type="button"
+      >
+        <span class="nav-icon">▤</span>
+        <span>Tagihan</span>
+      </button>
 
-        <div id="emptyState" class="empty">
-          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
-          <div class="empty-title">Belum ada tagihan aktif</div>
-          <div class="empty-copy">Buka halaman ini melalui tautan pembayaran resmi yang dikirim oleh sistem Finance Tracker.</div>
-        </div>
+      <button
+        class="nav-item"
+        data-page="history"
+        type="button"
+      >
+        <span class="nav-icon">↻</span>
+        <span>Riwayat</span>
+      </button>
 
-        <button id="payButton" class="cta" type="button" disabled>
-          <span>Memuat pembayaran...</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-        </button>
+      <button
+        class="nav-item"
+        data-page="profile"
+        type="button"
+      >
+        <span class="nav-icon">○</span>
+        <span>Profil</span>
+      </button>
 
-        <div id="statusBox" class="status-box loading">Memeriksa payment request...</div>
+    </nav>
 
-      </section>
+  </div>
+
+
+  <!-- ======================================================
+       BACKEND SETUP MODAL
+       ====================================================== -->
+
+  <div
+    id="backendSetup"
+    class="modal-backdrop hidden"
+  >
+
+    <section class="modal-card">
+
+      <div class="modal-icon">
+        ⚙
+      </div>
+
+      <p class="eyebrow">
+        SETUP PERTAMA
+      </p>
+
+      <h2>
+        Hubungkan backend demo
+      </h2>
+
+      <p class="modal-copy">
+        Paste URL Web App Apps Script SPP Demo yang berakhiran
+        <strong>/exec</strong>.
+        URL disimpan hanya di browser ini.
+      </p>
+
+      <label
+        class="field-label"
+        for="backendUrl"
+      >
+        Apps Script Web App URL
+      </label>
+
+      <input
+        id="backendUrl"
+        class="text-input"
+        type="url"
+        placeholder="https://script.google.com/macros/s/.../exec"
+        autocomplete="off"
+      >
+
+      <p
+        id="setupMessage"
+        class="form-message"
+      ></p>
+
+      <button
+        id="saveBackendButton"
+        class="primary-button"
+        type="button"
+      >
+        Simpan & Tes Koneksi
+      </button>
+
+    </section>
+
+  </div>
+
+
+  <!-- ======================================================
+       LOADING
+       ====================================================== -->
+
+  <div
+    id="loadingOverlay"
+    class="loading-backdrop hidden"
+  >
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <span id="loadingText">
+        Memuat...
+      </span>
     </div>
+  </div>
 
-    <footer class="footer"><span>Powered by <strong>DOKU Sandbox</strong></span><span>Finance Tracker</span></footer>
-  </main>
 
-  <script>
-    /* =========================================================
-     * 1. CONFIGURATION
-     * ========================================================= */
+  <!-- ======================================================
+       TOAST
+       ====================================================== -->
 
-    const API_URL =
-      'https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+  <div
+    id="toast"
+    class="toast hidden"
+  ></div>
 
-    const TOKEN_STORAGE_KEY =
-      'doku_secure_payment_token';
 
-
-    /* =========================================================
-     * 2. PAGE STATE
-     * ========================================================= */
-
-    let currentPayment = null;
-
-
-    /* =========================================================
-     * 3. DOM ELEMENTS
-     * ========================================================= */
-
-    const paymentDetail =
-      document.getElementById('paymentDetail');
-
-    const referenceNumber =
-      document.getElementById('referenceNumber');
-
-    const customerName =
-      document.getElementById('customerName');
-
-    const description =
-      document.getElementById('description');
-
-    const amountBox =
-      document.getElementById('amount');
-
-    const paymentStatus =
-      document.getElementById('paymentStatus');
-
-    const payButton =
-      document.getElementById('payButton');
-
-    const statusBox =
-      document.getElementById('statusBox');
-
-    const emptyState =
-      document.getElementById('emptyState');
-
-
-
-    /* =========================================================
-     * 4. READ SECURE TOKEN
-     *
-     * Token can arrive from:
-     * - #token=...  (preferred)
-     * - ?token=...  (legacy-compatible)
-     *
-     * After it is read, the token is removed from the address bar
-     * and stored temporarily in sessionStorage.
-     * ========================================================= */
-
-    const queryParams =
-      new URLSearchParams(window.location.search);
-
-    const hashParams =
-      new URLSearchParams(
-        window.location.hash
-          ? window.location.hash.substring(1)
-          : ''
-      );
-
-    const tokenFromUrl = String(
-      queryParams.get('token') ||
-      hashParams.get('token') ||
-      ''
-    ).trim();
-
-
-    if (tokenFromUrl) {
-
-      try {
-        sessionStorage.setItem(
-          TOKEN_STORAGE_KEY,
-          tokenFromUrl
-        );
-      } catch (error) {
-        // sessionStorage may be blocked by the browser.
-      }
-
-
-      try {
-        history.replaceState(
-          null,
-          document.title,
-          window.location.pathname
-        );
-      } catch (error) {
-        // URL cleanup is useful, but not required for payment flow.
-      }
-    }
-
-
-    let storedToken = '';
-
-    try {
-      storedToken =
-        sessionStorage.getItem(TOKEN_STORAGE_KEY) || '';
-    } catch (error) {
-      storedToken = '';
-    }
-
-
-    const paymentToken = String(
-      tokenFromUrl ||
-      storedToken ||
-      ''
-    ).trim();
-
-
-    /* =========================================================
-     * 5. INITIAL PAGE LOAD
-     * ========================================================= */
-
-    if (!paymentToken) {
-
-      showEmpty();
-
-    } else if (!/^[a-f0-9]{128}$/i.test(paymentToken)) {
-
-      showError(
-        'Format payment token tidak valid. ' +
-        'Gunakan tautan pembayaran resmi.'
-      );
-
-    } else {
-
-      loadSecurePayment();
-    }
-
-
-    /* =========================================================
-     * 6. BUTTON EVENTS
-     * ========================================================= */
-
-    payButton.addEventListener(
-      'click',
-      function () {
-
-        if (
-          !currentPayment ||
-          currentPayment.can_pay !== true
-        ) {
-          return;
-        }
-
-        createSecurePayment();
-      }
-    );
-
-
-
-
-    /* =========================================================
-     * 7. EMPTY STATE
-     * ========================================================= */
-
-    function showEmpty() {
-
-      emptyState.style.display = 'block';
-
-      payButton.disabled = true;
-      payButton.style.display = 'none';
-
-      statusBox.style.display = 'none';
-    }
-
-
-    /* =========================================================
-     * 8. LOAD PAYMENT DETAIL FROM BACKEND
-     * ========================================================= */
-
-    function loadSecurePayment() {
-
-      setStatus(
-        'loading',
-        'Memeriksa payment request...'
-      );
-
-      payButton.disabled = true;
-      payButton.style.display = 'flex';
-
-      setPayButtonText(
-        'Memuat pembayaran...'
-      );
-
-
-      jsonpRequest(
-        'getSecurePayment',
-        paymentToken,
-        function (response) {
-
-          if (
-            !response ||
-            response.success !== true ||
-            !response.data
-          ) {
-
-            showError(
-              response?.message ||
-              'Payment request tidak dapat dibaca.'
-            );
-
-            return;
-          }
-
-
-          currentPayment =
-            response.data;
-
-          renderPayment(
-            currentPayment
-          );
-        }
-      );
-    }
-
-
-    /* =========================================================
-     * 9. RENDER PAYMENT DETAIL
-     * ========================================================= */
-
-    function renderPayment(data) {
-
-      referenceNumber.textContent =
-        data.reference_number || '-';
-
-      customerName.textContent =
-        data.customer_name || '-';
-
-      description.textContent =
-        data.description || '-';
-
-      amountBox.textContent =
-        formatMoney(
-          data.amount,
-          data.currency || 'IDR'
-        );
-
-
-      const status = String(
-        data.status || '-'
-      ).toUpperCase();
-
-
-      paymentStatus.textContent =
-        status;
-
-      paymentStatus.className =
-        'status-pill ' + status.toLowerCase();
-
-      paymentDetail.style.display =
-        'block';
-
-
-      if (status === 'PAID') {
-
-        payButton.disabled = true;
-
-        setPayButtonText(
-          'Pembayaran Sudah Berhasil'
-        );
-
-        setStatus(
-          'success',
-          'Pembayaran ini sudah berhasil.'
-        );
-
-        return;
-      }
-
-
-      if (status === 'EXPIRED') {
-
-        payButton.disabled = true;
-
-        setPayButtonText(
-          'Pembayaran Kedaluwarsa'
-        );
-
-        showError(
-          'Link pembayaran ini sudah kedaluwarsa.'
-        );
-
-        return;
-      }
-
-
-      if (data.can_pay !== true) {
-
-        payButton.disabled = true;
-
-        setPayButtonText(
-          'Pembayaran Tidak Tersedia'
-        );
-
-        showError(
-          'Pembayaran belum dapat diproses untuk status ini.'
-        );
-
-        return;
-      }
-
-
-      payButton.disabled = false;
-
-      setPayButtonText(
-        data.payment_created === true
-          ? 'Buka Checkout DOKU'
-          : 'Bayar dengan DOKU'
-      );
-
-      setStatus(
-        'success',
-        'Detail pembayaran berhasil diverifikasi dari backend.'
-      );
-    }
-
-
-    /* =========================================================
-     * 10. CREATE / REUSE SECURE DOKU PAYMENT
-     *
-     * IMPORTANT:
-     * Browser only sends the secure token.
-     * Amount is still read from PAYMENT_REQUEST by the backend.
-     * ========================================================= */
-
-    function createSecurePayment() {
-
-      payButton.disabled = true;
-
-      setPayButtonText(
-        'Memproses...'
-      );
-
-      setStatus(
-        'loading',
-        'Menyiapkan DOKU Checkout...'
-      );
-
-
-      jsonpRequest(
-        'createSecurePayment',
-        paymentToken,
-        function (response) {
-
-          if (
-            !response ||
-            response.success !== true
-          ) {
-
-            payButton.disabled = false;
-
-            setPayButtonText(
-              'Coba Lagi'
-            );
-
-            showError(
-              response?.message ||
-              'Gagal membuat pembayaran.'
-            );
-
-            return;
-          }
-
-
-          const paymentUrl =
-            response?.data?.payment_url;
-
-
-          if (!paymentUrl) {
-
-            payButton.disabled = false;
-
-            setPayButtonText(
-              'Coba Lagi'
-            );
-
-            showError(
-              'Payment URL tidak ditemukan.'
-            );
-
-            return;
-          }
-
-
-          redirectToDokuCheckout(
-            paymentUrl,
-            response?.data?.reused === true
-          );
-        }
-      );
-    }
-
-
-    /* =========================================================
-     * 11. REDIRECT TO DOKU HOSTED CHECKOUT
-     *
-     * Current production-like Sandbox flow:
-     * Finance Tracker validates the request first, then the
-     * customer is redirected to DOKU's hosted checkout page.
-     *
-     * We intentionally do NOT use the DOKU pop-up SDK here.
-     * ========================================================= */
-
-    function redirectToDokuCheckout(
-      paymentUrl,
-      reused
-    ) {
-
-      setStatus(
-        'loading',
-        reused
-          ? 'Melanjutkan transaksi DOKU yang sudah dibuat...'
-          : 'Berhasil. Mengarahkan ke DOKU...'
-      );
-
-
-      window.location.href =
-        paymentUrl;
-    }
-
-
-
-    /* =========================================================
-     * 12. JSONP REQUEST — SECURE TOKEN ENDPOINTS
-     * ========================================================= */
-
-    function jsonpRequest(
-      action,
-      token,
-      callback
-    ) {
-
-      const callbackName =
-        'ftPayCallback_' +
-        Date.now() +
-        '_' +
-        Math.random().toString(36).slice(2);
-
-      const script =
-        document.createElement('script');
-
-
-      const timeout =
-        window.setTimeout(
-          function () {
-
-            cleanupJsonp(
-              callbackName,
-              script
-            );
-
-            showError(
-              'Server pembayaran tidak merespons. Silakan coba lagi.'
-            );
-
-            payButton.disabled = false;
-
-            setPayButtonText(
-              'Coba Lagi'
-            );
-          },
-          20000
-        );
-
-
-      window[callbackName] =
-        function (response) {
-
-          window.clearTimeout(timeout);
-
-          cleanupJsonp(
-            callbackName,
-            script
-          );
-
-          callback(response);
-        };
-
-
-      script.src =
-        API_URL +
-        '?action=' + encodeURIComponent(action) +
-        '&token=' + encodeURIComponent(token) +
-        '&callback=' + encodeURIComponent(callbackName);
-
-
-      script.onerror =
-        function () {
-
-          window.clearTimeout(timeout);
-
-          cleanupJsonp(
-            callbackName,
-            script
-          );
-
-          showError(
-            'Tidak dapat menghubungi server pembayaran.'
-          );
-
-          payButton.disabled = false;
-
-          setPayButtonText(
-            'Coba Lagi'
-          );
-        };
-
-
-      document.body.appendChild(
-        script
-      );
-    }
-
-
-
-    /* =========================================================
-     * 13. SMALL UI HELPERS
-     * ========================================================= */
-
-    function setPayButtonText(text) {
-
-      const label =
-        payButton.querySelector('span');
-
-      if (label) {
-        label.textContent = text;
-      }
-    }
-
-
-    function setStatus(
-      type,
-      message
-    ) {
-
-      statusBox.className =
-        'status-box ' + type;
-
-      statusBox.textContent =
-        message;
-
-      statusBox.style.display =
-        'block';
-    }
-
-
-    function showError(message) {
-
-      setStatus(
-        'error',
-        message
-      );
-    }
-
-
-    function formatMoney(
-      amount,
-      currency
-    ) {
-
-      const number =
-        Number(amount);
-
-
-      if (!Number.isFinite(number)) {
-        return '-';
-      }
-
-
-      try {
-
-        return new Intl.NumberFormat(
-          'id-ID',
-          {
-            style: 'currency',
-            currency: currency || 'IDR',
-            maximumFractionDigits: 0
-          }
-        ).format(number);
-
-      } catch (error) {
-
-        return 'Rp' +
-          number.toLocaleString('id-ID');
-      }
-    }
-
-
-    function cleanupJsonp(
-      callbackName,
-      script
-    ) {
-
-      if (
-        script &&
-        script.parentNode
-      ) {
-        script.remove();
-      }
-
-
-      try {
-        delete window[callbackName];
-      } catch (error) {
-        // Safe to ignore.
-      }
-    }
-
-
-    /* =========================================================
-     * 14. PWA SERVICE WORKER
-     * ========================================================= */
-
-    if ('serviceWorker' in navigator) {
-
-      window.addEventListener(
-        'load',
-        function () {
-
-          navigator.serviceWorker
-            .register('./sw.js')
-            .catch(function () {
-              // Payment flow must still work even if PWA registration fails.
-            });
-        }
-      );
-    }
-  </script>
+  <script src="./js/app.js"></script>
 </body>
 </html>

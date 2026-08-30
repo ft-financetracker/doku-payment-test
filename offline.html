@@ -1,73 +1,95 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>FT Pay • Offline</title>
-  <meta name="theme-color" content="#0B132B">
-  <meta name="color-scheme" content="dark">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="FT Pay">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"><style>
-    :root{
-      --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
-      --green:#B6FF00;--green-soft:#D3FF42;--white:#FFFFFF;--ink:#EAF0FF;
-      --muted:#9AABCE;--muted-2:#7185AE;--line:rgba(125,154,214,.18);
-      --panel:rgba(12,24,55,.88);--panel-2:rgba(17,36,78,.60);--danger:#FF6B78;
-      --warning:#F4B942;--shadow:0 34px 90px rgba(0,0,0,.40);
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <meta
+    name="theme-color"
+    content="#0B132B"
+  >
+  <title>SPP Pay Demo — Offline</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
     }
-    *{box-sizing:border-box}
-    html{min-height:100%;background:var(--navy)}
-    body{
-      margin:0;min-height:100vh;min-height:100dvh;padding:28px;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--ink);overflow-x:hidden;
-      background:
-        radial-gradient(1000px 720px at 100% -10%,rgba(30,58,138,.46),transparent 60%),
-        radial-gradient(800px 620px at -10% 110%,rgba(30,58,138,.28),transparent 58%),
-        linear-gradient(145deg,#071126 0%,#0B132B 52%,#08142F 100%);
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      background: #F3F6FA;
+      color: #172033;
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif;
     }
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;background:
-      linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.28%,transparent 77.42%),
-      repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.09) 25px 26px);
-      mask-image:linear-gradient(to bottom,transparent 0,#000 20%,#000 100%)}
-    .shell{width:min(100%,1160px);margin:0 auto;position:relative;z-index:1}
-    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 2px 22px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.26)}
-    .brand-copy{min-width:0}.brand-name{font-size:17px;font-weight:900;letter-spacing:-.02em;color:#fff;white-space:nowrap}.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.19em;color:var(--muted);font-weight:800;margin-top:3px}
-    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.34);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
-    .env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
-    .workspace{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);gap:28px;align-items:stretch}
-    .intro{position:relative;min-height:610px;padding:56px 44px 42px;border:1px solid rgba(123,155,220,.13);border-radius:34px;overflow:hidden;background:linear-gradient(145deg,rgba(8,20,47,.54),rgba(7,17,38,.20));box-shadow:0 24px 80px rgba(0,0,0,.18)}
-    .intro:before{content:"";position:absolute;inset:-120px -210px auto auto;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.24),transparent 68%);pointer-events:none}
-    .intro:after{content:"";position:absolute;left:44px;bottom:42px;width:88px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
-    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:10px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;margin-bottom:14px}.eyebrow:before{content:"";width:22px;height:2px;background:var(--green);border-radius:2px}
-    .intro h1{margin:0;max-width:640px;font-size:clamp(42px,5.3vw,68px);line-height:.98;letter-spacing:-.055em;color:#fff}
-    .intro h1 .accent{color:var(--green)}
-    .intro-copy{max-width:600px;margin:20px 0 0;color:#AAB9D8;font-size:15px;line-height:1.75}
-    .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
-    .trust-item{min-height:120px;padding:16px;border:1px solid rgba(125,154,214,.14);border-radius:18px;background:rgba(255,255,255,.025)}
-    .trust-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.17);color:var(--green);margin-bottom:12px}.trust-icon svg{width:17px;height:17px}
-    .trust-title{font-size:12px;font-weight:900;color:#EDF3FF}.trust-copy{margin-top:5px;color:#7F93BA;font-size:10px;line-height:1.5}
-    .card{position:relative;overflow:hidden;border:1px solid rgba(123,155,220,.20);border-radius:34px;padding:30px;background:linear-gradient(155deg,rgba(16,31,66,.97),rgba(8,19,43,.95));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
-    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .card:after{content:"";position:absolute;width:250px;height:250px;right:-125px;top:-125px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.22),transparent 70%);pointer-events:none}
-    .card-head{padding-bottom:22px;border-bottom:1px solid var(--line);position:relative;z-index:1}
-    .card-kicker{color:var(--green);font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin-bottom:9px}
-    .card h2,.card h1{margin:0;color:#fff;letter-spacing:-.035em}.card h2{font-size:28px;line-height:1.05}.card h1{font-size:30px;line-height:1.05}
-    .card-subtitle{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.65;max-width:430px}
-    .secure-note{display:flex;align-items:center;gap:9px;margin-top:15px;color:#B9C6E2;font-size:10px}.secure-note-icon{width:22px;height:22px;display:grid;place-items:center;border-radius:8px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.18);color:var(--green)}
-    .detail{display:none;margin-top:20px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
-    .detail-row{display:grid;grid-template-columns:145px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}.detail-row:last-child{border-bottom:0}.detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
-    .detail-label{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}.detail-value{font-size:13px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}.amount-value{font-size:26px;line-height:1;font-weight:950;letter-spacing:-.035em;color:var(--green-soft)}
-    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:9px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
-    .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}.status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}.status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
-    .empty{display:none;margin-top:20px;padding:28px 20px;border-radius:20px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}.empty-icon{width:50px;height:50px;margin:0 auto 12px;display:grid;place-items:center;border-radius:16px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}.empty-title{font-size:14px;font-weight:900;color:#ECF2FF}.empty-copy{max-width:340px;margin:6px auto 0;font-size:11px;line-height:1.6;color:#8396BD}
-    .cta{width:100%;margin-top:17px;min-height:54px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:14px;font-weight:950;letter-spacing:-.01em;cursor:pointer;box-shadow:0 13px 30px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}.cta:hover{transform:translateY(-1px);filter:brightness(1.04)}.cta:active{transform:translateY(0)}.cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}.cta svg{width:17px;height:17px}
-    .secondary-btn{width:100%;margin-top:10px;min-height:48px;border:1px solid var(--line);border-radius:15px;padding:12px 16px;background:rgba(255,255,255,.025);color:#DCE6FA;font-size:13px;font-weight:850;cursor:pointer}
-    .status-box{display:none;margin-top:12px;padding:12px 13px;border-radius:14px;font-size:11px;line-height:1.55;border:1px solid transparent}.status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}.status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}.status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
-    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:9px}.footer strong{color:#95A8CF;font-weight:850}.install-btn{display:none;border:0;background:none;color:#AFC4ED;font:inherit;font-weight:850;cursor:pointer;padding:0}
-    .result-icon{width:78px;height:78px;margin-bottom:20px;display:grid;place-items:center;border-radius:24px;border:1px solid rgba(46,100,215,.18);background:rgba(46,100,215,.07);color:#8FB4FF;box-shadow:0 14px 36px rgba(0,0,0,.20)}.result-icon svg{width:36px;height:36px}.result-icon.success{color:var(--green);background:rgba(182,255,0,.07);border-color:rgba(182,255,0,.2)}.result-icon.failed{color:#FF8E98;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.18)}
-    @media(max-width:900px){body{padding:20px}.shell{width:min(100%,600px)}.workspace{grid-template-columns:1fr;gap:16px}.intro{min-height:auto;padding:28px 26px 30px}.intro h1{font-size:clamp(34px,8vw,48px)}.intro-copy{font-size:13px;margin-top:14px}.trust-grid{margin-top:22px}.card{padding:26px}.intro:after{display:none}}
-    @media(max-width:560px){body{padding:15px}.brandbar{margin-bottom:14px}.brand-mark{width:42px;height:42px;flex-basis:42px}.brand-name{font-size:15px}.brand-sub{display:none}.intro{padding:22px 20px;border-radius:26px}.intro h1{font-size:34px}.intro-copy{font-size:12px}.trust-grid{grid-template-columns:1fr;gap:8px}.trust-item{min-height:0;padding:12px 13px;display:grid;grid-template-columns:30px 1fr;column-gap:10px;align-items:center}.trust-icon{width:30px;height:30px;margin:0;grid-row:1/3}.trust-title{font-size:11px}.trust-copy{margin:1px 0 0}.card{padding:21px;border-radius:26px}.card h2,.card h1{font-size:25px}.detail-row{grid-template-columns:1fr;gap:5px}.detail-value{text-align:left}.amount-value{font-size:24px}.footer{flex-wrap:wrap;justify-content:center}.env-badge{padding:7px 9px}.result-icon{width:68px;height:68px;border-radius:21px}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}
-</style></head><body><main class="shell"><header class="brandbar"><div class="brand"><img class="brand-mark" src="./icons/icon-192.png" alt="FT Pay"><div class="brand-copy"><div class="brand-name">Finance Tracker Pay</div><div class="brand-sub">Secure Payment Gateway</div></div></div></header><div class="workspace"><section class="intro"><div class="eyebrow">Offline Mode</div><h1>Koneksi terputus.<br><span class="accent">Data tetap aman.</span></h1><p class="intro-copy">FT Pay tidak menebak status pembayaran saat perangkat offline. Sambungkan internet untuk memverifikasi tagihan atau mengecek hasil pembayaran.</p></section><section class="card"><div class="card-head"><div class="card-kicker">Connection Required</div><h2>Hubungkan kembali internet</h2><p class="card-subtitle">Setelah koneksi aktif, muat ulang halaman agar status terbaru dibaca dari backend Finance Tracker.</p></div><button class="cta" type="button" onclick="location.reload()"><span>Coba Lagi</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v6h-6"/></svg></button></section></div><footer class="footer"><span>Finance Tracker</span><span>FT Pay</span></footer></main></body></html>
+
+    .card {
+      width: min(100%, 420px);
+      padding: 28px;
+      border-radius: 26px;
+      background: #FFFFFF;
+      box-shadow:
+        0 18px 50px rgba(11, 19, 43, 0.10);
+      text-align: center;
+    }
+
+    .mark {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 16px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: #0B132B;
+      color: #B6FF00;
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0;
+      color: #0B132B;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 10px 0 0;
+      color: #6E7788;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card">
+
+    <div class="mark">
+      S
+    </div>
+
+    <h1>
+      Sedang offline
+    </h1>
+
+    <p>
+      Dashboard dasar masih dapat dibuka dari cache,
+      tetapi pengecekan tagihan dan pembayaran membutuhkan
+      koneksi internet.
+    </p>
+
+  </main>
+
+</body>
+</html>
