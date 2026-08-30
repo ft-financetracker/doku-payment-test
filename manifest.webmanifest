@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Finance Tracker Pay",
   "short_name": "FT Pay",
-  "description": "Secure payment companion for Finance Tracker.",
+  "description": "Secure payment companion for Finance Tracker with verified server-side amounts.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -10,7 +10,7 @@
     "standalone",
     "minimal-ui"
   ],
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "background_color": "#0B132B",
   "theme_color": "#0B132B",
   "lang": "id-ID",
