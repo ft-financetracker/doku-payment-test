@@ -18,99 +18,116 @@
   <style>
     :root{
       --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
-      --green:#B6FF00;--green-soft:#D3FF42;--white:#FFFFFF;--ink:#EAF0FF;
-      --muted:#9AABCE;--muted-2:#7185AE;--line:rgba(125,154,214,.18);
-      --panel:rgba(12,24,55,.88);--panel-2:rgba(17,36,78,.60);--danger:#FF6B78;
-      --warning:#F4B942;--shadow:0 34px 90px rgba(0,0,0,.40);
+      --green:#B6FF00;--green-soft:#D3FF42;--ink:#EAF0FF;--muted:#B3C1DE;--muted-2:#8195BE;
+      --line:rgba(125,154,214,.16);--line-2:rgba(125,154,214,.10);--shadow:0 28px 80px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
     html{min-height:100%;background:var(--navy)}
     body{
-      margin:0;min-height:100vh;min-height:100dvh;padding:28px;
+      margin:0;min-height:100vh;min-height:100dvh;padding:26px;
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--ink);overflow-x:hidden;
       background:
-        radial-gradient(1000px 720px at 100% -10%,rgba(30,58,138,.46),transparent 60%),
-        radial-gradient(800px 620px at -10% 110%,rgba(30,58,138,.28),transparent 58%),
+        radial-gradient(900px 620px at 100% -10%,rgba(30,58,138,.42),transparent 60%),
+        radial-gradient(720px 540px at -10% 110%,rgba(30,58,138,.26),transparent 58%),
         linear-gradient(145deg,#071126 0%,#0B132B 52%,#08142F 100%);
     }
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;background:
-      linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.28%,transparent 77.42%),
-      repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.09) 25px 26px);
-      mask-image:linear-gradient(to bottom,transparent 0,#000 20%,#000 100%)}
-    .shell{width:min(100%,1160px);margin:0 auto;position:relative;z-index:1}
-    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 2px 22px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.26)}
-    .brand-copy{min-width:0}.brand-name{font-size:17px;font-weight:900;letter-spacing:-.02em;color:#fff;white-space:nowrap}.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.19em;color:var(--muted);font-weight:800;margin-top:3px}
-    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.34);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.34;background:
+      linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.26%,transparent 77.38%),
+      repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.08) 25px 26px);
+      mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 100%)}
+    .shell{width:min(100%,1180px);margin:0 auto;position:relative;z-index:1}
+    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{width:46px;height:46px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+    .brand-name{font-size:16px;font-weight:900;letter-spacing:-.02em;color:#fff;white-space:nowrap}
+    .brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#97A9D0;font-weight:800;margin-top:3px}
+    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.32);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
     .env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
-    .workspace{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);gap:28px;align-items:stretch}
-    .intro{position:relative;min-height:610px;padding:56px 44px 42px;border:1px solid rgba(123,155,220,.13);border-radius:34px;overflow:hidden;background:linear-gradient(145deg,rgba(8,20,47,.54),rgba(7,17,38,.20));box-shadow:0 24px 80px rgba(0,0,0,.18)}
-    .intro:before{content:"";position:absolute;inset:-120px -210px auto auto;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.24),transparent 68%);pointer-events:none}
-    .intro:after{content:"";position:absolute;left:44px;bottom:42px;width:88px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
-    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:10px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;margin-bottom:14px}.eyebrow:before{content:"";width:22px;height:2px;background:var(--green);border-radius:2px}
-    .intro h1{margin:0;max-width:640px;font-size:clamp(42px,5.3vw,68px);line-height:.98;letter-spacing:-.055em;color:#fff}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);gap:24px;align-items:stretch}
+    .panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.92));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
+    .panel:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
+    .intro{padding:42px 34px 30px;min-height:580px}
+    .intro:after{content:"";position:absolute;left:34px;bottom:30px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}.eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
+    .intro h1{margin:0;max-width:560px;font-size:clamp(34px,4.8vw,56px);line-height:1.02;letter-spacing:-.045em;color:#fff}
     .intro h1 .accent{color:var(--green)}
-    .intro-copy{max-width:600px;margin:20px 0 0;color:#AAB9D8;font-size:15px;line-height:1.75}
-    .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
-    .trust-item{min-height:120px;padding:16px;border:1px solid rgba(125,154,214,.14);border-radius:18px;background:rgba(255,255,255,.025)}
-    .trust-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.17);color:var(--green);margin-bottom:12px}.trust-icon svg{width:17px;height:17px}
-    .trust-title{font-size:12px;font-weight:900;color:#EDF3FF}.trust-copy{margin-top:5px;color:#7F93BA;font-size:10px;line-height:1.5}
-    .card{position:relative;overflow:hidden;border:1px solid rgba(123,155,220,.20);border-radius:34px;padding:30px;background:linear-gradient(155deg,rgba(16,31,66,.97),rgba(8,19,43,.95));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
-    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .card:after{content:"";position:absolute;width:250px;height:250px;right:-125px;top:-125px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.22),transparent 70%);pointer-events:none}
-    .card-head{padding-bottom:22px;border-bottom:1px solid var(--line);position:relative;z-index:1}
-    .card-kicker{color:var(--green);font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin-bottom:9px}
-    .card h2,.card h1{margin:0;color:#fff;letter-spacing:-.035em}.card h2{font-size:28px;line-height:1.05}.card h1{font-size:30px;line-height:1.05}
-    .card-subtitle{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.65;max-width:430px}
-    .secure-note{display:flex;align-items:center;gap:9px;margin-top:15px;color:#B9C6E2;font-size:10px}.secure-note-icon{width:22px;height:22px;display:grid;place-items:center;border-radius:8px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.18);color:var(--green)}
-    .detail{display:none;margin-top:20px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
-    .detail-row{display:grid;grid-template-columns:145px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}.detail-row:last-child{border-bottom:0}.detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
-    .detail-label{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}.detail-value{font-size:13px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}.amount-value{font-size:26px;line-height:1;font-weight:950;letter-spacing:-.035em;color:var(--green-soft)}
-    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:9px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
-    .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}.status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}.status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
-    .empty{display:none;margin-top:20px;padding:28px 20px;border-radius:20px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}.empty-icon{width:50px;height:50px;margin:0 auto 12px;display:grid;place-items:center;border-radius:16px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}.empty-title{font-size:14px;font-weight:900;color:#ECF2FF}.empty-copy{max-width:340px;margin:6px auto 0;font-size:11px;line-height:1.6;color:#8396BD}
-    .cta{width:100%;margin-top:17px;min-height:54px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:14px;font-weight:950;letter-spacing:-.01em;cursor:pointer;box-shadow:0 13px 30px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}.cta:hover{transform:translateY(-1px);filter:brightness(1.04)}.cta:active{transform:translateY(0)}.cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}.cta svg{width:17px;height:17px}
-    .secondary-btn{width:100%;margin-top:10px;min-height:48px;border:1px solid var(--line);border-radius:15px;padding:12px 16px;background:rgba(255,255,255,.025);color:#DCE6FA;font-size:13px;font-weight:850;cursor:pointer}
-    .status-box{display:none;margin-top:12px;padding:12px 13px;border-radius:14px;font-size:11px;line-height:1.55;border:1px solid transparent}.status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}.status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}.status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
-    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:9px}.footer strong{color:#95A8CF;font-weight:850}.install-btn{display:none;border:0;background:none;color:#AFC4ED;font:inherit;font-weight:850;cursor:pointer;padding:0}
-    .result-icon{width:78px;height:78px;margin-bottom:20px;display:grid;place-items:center;border-radius:24px;border:1px solid rgba(46,100,215,.18);background:rgba(46,100,215,.07);color:#8FB4FF;box-shadow:0 14px 36px rgba(0,0,0,.20)}.result-icon svg{width:36px;height:36px}.result-icon.success{color:var(--green);background:rgba(182,255,0,.07);border-color:rgba(182,255,0,.2)}.result-icon.failed{color:#FF8E98;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.18)}
-    @media(max-width:900px){body{padding:20px}.shell{width:min(100%,600px)}.workspace{grid-template-columns:1fr;gap:16px}.intro{min-height:auto;padding:28px 26px 30px}.intro h1{font-size:clamp(34px,8vw,48px)}.intro-copy{font-size:13px;margin-top:14px}.trust-grid{margin-top:22px}.card{padding:26px}.intro:after{display:none}}
-    @media(max-width:560px){body{padding:15px}.brandbar{margin-bottom:14px}.brand-mark{width:42px;height:42px;flex-basis:42px}.brand-name{font-size:15px}.brand-sub{display:none}.intro{padding:22px 20px;border-radius:26px}.intro h1{font-size:34px}.intro-copy{font-size:12px}.trust-grid{grid-template-columns:1fr;gap:8px}.trust-item{min-height:0;padding:12px 13px;display:grid;grid-template-columns:30px 1fr;column-gap:10px;align-items:center}.trust-icon{width:30px;height:30px;margin:0;grid-row:1/3}.trust-title{font-size:11px}.trust-copy{margin:1px 0 0}.card{padding:21px;border-radius:26px}.card h2,.card h1{font-size:25px}.detail-row{grid-template-columns:1fr;gap:5px}.detail-value{text-align:left}.amount-value{font-size:24px}.footer{flex-wrap:wrap;justify-content:center}.env-badge{padding:7px 9px}.result-icon{width:68px;height:68px;border-radius:21px}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}
-</style>
+    .intro-copy{max-width:560px;margin:20px 0 0;color:var(--muted);font-size:15px;line-height:1.72}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+    .feature{padding:16px;border:1px solid var(--line-2);border-radius:18px;background:rgba(255,255,255,.025)}
+    .feature-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.18);color:var(--green);margin-bottom:12px}.feature-icon svg{width:18px;height:18px}
+    .feature-title{font-size:13px;font-weight:900;color:#EDF3FF;margin:0 0 6px}
+    .feature-copy{color:#90A3CA;font-size:11px;line-height:1.58}
+    .pay-card{padding:24px}
+    .card-head{padding:4px 4px 18px;border-bottom:1px solid var(--line)}
+    .card-kicker{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+    .card-title{margin:0;color:#fff;font-size:22px;line-height:1.1;letter-spacing:-.03em}
+    .card-subtitle{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.68;max-width:430px}
+    .secure-note{display:flex;align-items:center;gap:10px;margin-top:16px;color:#C4D0E6;font-size:11px;line-height:1.55}
+    .secure-note-icon{width:24px;height:24px;display:grid;place-items:center;border-radius:8px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.18);color:var(--green);flex:0 0 24px}
+    .detail{display:none;margin-top:18px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
+    .detail-row{display:grid;grid-template-columns:135px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}
+    .detail-row:last-child{border-bottom:0}
+    .detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
+    .detail-label{font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}
+    .detail-value{font-size:14px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}
+    .amount-value{font-size:22px;line-height:1.05;font-weight:950;letter-spacing:-.03em;color:var(--green-soft)}
+    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+    .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}
+    .status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}
+    .status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
+    .empty{display:none;margin-top:18px;padding:28px 18px;border-radius:20px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}
+    .empty-icon{width:48px;height:48px;margin:0 auto 12px;display:grid;place-items:center;border-radius:14px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}
+    .empty-title{font-size:14px;font-weight:900;color:#ECF2FF}
+    .empty-copy{max-width:360px;margin:6px auto 0;font-size:11px;line-height:1.65;color:#8B9CC1}
+    .cta{width:100%;margin-top:16px;min-height:54px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:15px;font-weight:950;letter-spacing:-.01em;cursor:pointer;box-shadow:0 13px 30px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}.cta:hover{transform:translateY(-1px);filter:brightness(1.04)}.cta:active{transform:translateY(0)}.cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}.cta svg{width:17px;height:17px}
+    .status-box{display:none;margin-top:12px;padding:13px 14px;border-radius:14px;font-size:12px;line-height:1.6;border:1px solid transparent}
+    .status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}
+    .status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}
+    .status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:10px}.footer strong{color:#95A8CF;font-weight:850}
+    .install-btn{display:none;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#D7E4FA;border-radius:14px;padding:11px 13px;font-size:12px;font-weight:850;cursor:pointer}
+    .install-btn.show{display:inline-flex;align-items:center;gap:8px}
+    @media (max-width: 980px){.workspace{grid-template-columns:1fr}.intro{min-height:auto}.feature-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width: 720px){body{padding:18px}.brandbar{margin-bottom:18px}.brand-mark{width:42px;height:42px}.brand-name{font-size:15px}.intro,.pay-card{padding:22px}.intro h1{font-size:clamp(30px,10vw,46px)}.intro-copy,.card-subtitle{font-size:14px}.feature-grid{grid-template-columns:1fr}.detail-row{grid-template-columns:1fr;gap:8px}.detail-value{text-align:left}.amount-value{font-size:20px}.footer{flex-direction:column;align-items:flex-start}}
+  </style>
 </head>
 <body>
   <main class="shell">
     <header class="brandbar">
       <div class="brand">
-        <img class="brand-mark" src="./icons/icon-192.png" alt="FT Pay">
-        <div class="brand-copy"><div class="brand-name">Finance Tracker Pay</div><div class="brand-sub">Secure Payment Gateway</div></div>
+        <img class="brand-mark" src="./assets/ft-pay-mark.svg" alt="FT Pay">
+        <div>
+          <div class="brand-name">Finance Tracker Pay</div>
+          <div class="brand-sub">Secure Payment Gateway</div>
+        </div>
       </div>
-      <div class="env-badge"><span class="env-dot"></span>Sandbox</div>
+      <div class="env-badge"><span class="env-dot"></span> Sandbox</div>
     </header>
 
     <div class="workspace">
-      <section class="intro" aria-labelledby="introTitle">
+      <section class="panel intro" aria-labelledby="introTitle">
         <div class="eyebrow">Finance Tracker Payment</div>
-        <h1 id="introTitle">Pembayaran aman.<br><span class="accent">Nominal tetap.</span></h1>
+        <h1 id="introTitle">Pembayaran aman.<br><span class="accent">Nominal terverifikasi.</span></h1>
         <p class="intro-copy">FT Pay memisahkan data tagihan dari browser. Customer hanya menerima tautan pembayaran, sedangkan identitas, nominal, dan status tetap diverifikasi oleh backend Finance Tracker.</p>
-        <div class="trust-grid">
-          <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="trust-title">Secure Token</div><div class="trust-copy">Akses pembayaran memakai token acak, bukan nomor tagihan publik.</div></div>
-          <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="M8 11h8M8 14h5"/></svg></div><div class="trust-title">Server-side Amount</div><div class="trust-copy">Nominal resmi berasal dari PAYMENT_REQUEST dan tidak dapat diedit user.</div></div>
-          <div class="trust-item"><div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div class="trust-title">Audit Trail</div><div class="trust-copy">Perubahan status terekam dan direkonsiliasi otomatis oleh payment engine.</div></div>
+
+        <div class="feature-grid">
+          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/><path d="m9.5 12 1.8 1.8L15 10.2"/></svg></div><div class="feature-title">Secure Token</div><div class="feature-copy">Akses pembayaran memakai token aman, bukan nominal yang bisa diubah dari browser.</div></div>
+          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h10M7 14h5"/></svg></div><div class="feature-title">Server-side Amount</div><div class="feature-copy">Nominal resmi hanya dibaca dari PAYMENT_REQUEST dan tidak bisa diedit user.</div></div>
+          <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="m7 15 5 5 5-5"/><path d="M7 4h10"/></svg></div><div class="feature-title">Audit Trail</div><div class="feature-copy">Perubahan status tercatat otomatis pada PAYMENT_LOG, PAYMENT_REQUEST, dan history.</div></div>
         </div>
       </section>
 
-      <section class="card" aria-labelledby="pageTitle">
+      <section class="panel pay-card" aria-labelledby="paymentTitle">
         <div class="card-head">
           <div class="card-kicker">Verified Payment</div>
-          <h2 id="pageTitle">Detail pembayaran</h2>
+          <h2 id="paymentTitle" class="card-title">Detail pembayaran</h2>
           <p class="card-subtitle">Data di bawah ini dibaca langsung dari backend Finance Tracker. Pastikan nama dan nominal sesuai sebelum melanjutkan.</p>
-          <div class="secure-note"><span class="secure-note-icon"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span> Secure token • server-side amount • audit trail</div>
+          <div class="secure-note"><span class="secure-note-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/></svg></span><span>Secure token • server-side amount • audit trail</span></div>
         </div>
 
-        <div id="paymentDetail" class="detail" aria-live="polite">
+        <div id="paymentDetail" class="detail">
           <div class="detail-row"><span class="detail-label">Referensi</span><span id="referenceNumber" class="detail-value">-</span></div>
           <div class="detail-row"><span class="detail-label">Customer</span><span id="customerName" class="detail-value">-</span></div>
           <div class="detail-row"><span class="detail-label">Keterangan</span><span id="description" class="detail-value">-</span></div>
@@ -119,134 +136,61 @@
         </div>
 
         <div id="emptyState" class="empty">
-          <div class="empty-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16v11H4z"/><path d="M7 7V5h10v2"/><path d="M8 12h8"/></svg></div>
+          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
           <div class="empty-title">Belum ada tagihan aktif</div>
           <div class="empty-copy">Buka halaman ini melalui tautan pembayaran resmi yang dikirim oleh sistem Finance Tracker.</div>
         </div>
 
-        <button id="payButton" class="cta" type="button" disabled><span id="payButtonLabel">Memuat pembayaran...</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
-        <div id="statusBox" class="status-box loading" role="status" aria-live="polite">Memeriksa payment request...</div>
+        <button id="payButton" class="cta" type="button" disabled>
+          <span>Memuat pembayaran...</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </button>
+
+        <div id="statusBox" class="status-box loading">Memeriksa payment request...</div>
       </section>
     </div>
 
-    <footer class="footer"><span>Powered by <strong>DOKU Sandbox</strong></span><button id="installButton" class="install-btn" type="button">Install FT Pay</button><span>Finance Tracker</span></footer>
+    <footer class="footer"><span>Powered by <strong>DOKU Sandbox</strong></span><span>Finance Tracker</span></footer>
   </main>
+
   <script>
-const API_URL='https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+    const API_URL='https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv1fb0SZ-rbpebE2ZGVu-6qINGFwkDV7tyNUpi2CADqu/exec';
+    const TOKEN_STORAGE_KEY='doku_secure_payment_token';
+    let deferredPrompt=null;
+    let currentPayment=null;
+
     const paymentDetail=document.getElementById('paymentDetail');
-    const emptyState=document.getElementById('emptyState');
     const referenceNumber=document.getElementById('referenceNumber');
     const customerName=document.getElementById('customerName');
     const description=document.getElementById('description');
     const amountBox=document.getElementById('amount');
     const paymentStatus=document.getElementById('paymentStatus');
     const payButton=document.getElementById('payButton');
-    const payButtonLabel=document.getElementById('payButtonLabel');
     const statusBox=document.getElementById('statusBox');
-    const installButton=document.getElementById('installButton');
-    const TOKEN_STORAGE_KEY='doku_secure_payment_token';
+    const emptyState=document.getElementById('emptyState');
+
     const queryParams=new URLSearchParams(window.location.search);
     const hashParams=new URLSearchParams(window.location.hash?window.location.hash.substring(1):'');
-    const tokenFromUrl=String(hashParams.get('token')||queryParams.get('token')||'').trim();
-
-    if(tokenFromUrl){
-      try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}
-      try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}
-    }
-
-    let storedToken='';
-    try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
+    const tokenFromUrl=String(queryParams.get('token')||hashParams.get('token')||'').trim();
+    if(tokenFromUrl){try{sessionStorage.setItem(TOKEN_STORAGE_KEY,tokenFromUrl);}catch(err){}try{history.replaceState(null,document.title,window.location.pathname);}catch(err){}}
+    let storedToken='';try{storedToken=sessionStorage.getItem(TOKEN_STORAGE_KEY)||'';}catch(err){}
     const paymentToken=String(tokenFromUrl||storedToken||'').trim();
-    let currentPayment=null;
 
-    if(!paymentToken){showEmptyState();}
-    else if(!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Link pembayaran tidak valid atau sudah tidak tersedia.');}
+    if(!paymentToken){showEmpty();}
+    else if(!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Format payment token tidak valid. Gunakan tautan pembayaran resmi.');}
     else{loadSecurePayment();}
 
-    payButton.addEventListener('click',function(){
-      if(!currentPayment||currentPayment.can_pay!==true)return;
-      createSecurePayment();
-    });
+    payButton.addEventListener('click',function(){if(!currentPayment||currentPayment.can_pay!==true)return;createSecurePayment();});
 
-    function loadSecurePayment(){
-      emptyState.style.display='none';
-      setStatus('loading','Memeriksa payment request...');
-      setButton(true,'Memuat pembayaran...');
-      jsonpRequest('getSecurePayment',paymentToken,function(response){
-        if(!response||response.success!==true||!response.data){showError(response?.message||'Payment request tidak dapat dibaca.');return;}
-        currentPayment=response.data;
-        renderPayment(currentPayment);
-      });
-    }
-
-    function renderPayment(data){
-      referenceNumber.textContent=data.reference_number||'-';
-      customerName.textContent=data.customer_name||'-';
-      description.textContent=data.description||'-';
-      amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');
-      const status=String(data.status||'-').toUpperCase();
-      paymentStatus.textContent=status;
-      paymentStatus.className='status-pill '+status.toLowerCase();
-      paymentDetail.style.display='block';
-      emptyState.style.display='none';
-
-      if(status==='PAID'){
-        setButton(true,'Pembayaran Sudah Berhasil');
-        setStatus('success','Pembayaran ini sudah dikonfirmasi dan tercatat.');
-        return;
-      }
-      if(status==='EXPIRED'){
-        setButton(true,'Pembayaran Kedaluwarsa');
-        showError('Masa pembayaran telah berakhir. Gunakan tautan pembayaran baru.');
-        return;
-      }
-      if(status==='CANCELLED'){
-        setButton(true,'Pembayaran Dibatalkan');
-        showError('Payment request ini sudah tidak aktif.');
-        return;
-      }
-      if(data.can_pay!==true){
-        setButton(true,'Pembayaran Tidak Tersedia');
-        showError('Pembayaran belum dapat diproses untuk status ini.');
-        return;
-      }
-      setButton(false,data.payment_created===true?'Lanjutkan Pembayaran':'Bayar dengan DOKU');
-      setStatus('success','Detail pembayaran berhasil diverifikasi dari backend.');
-    }
-
-    function createSecurePayment(){
-      setButton(true,'Memproses...');
-      setStatus('loading','Menyiapkan transaksi DOKU...');
-      jsonpRequest('createSecurePayment',paymentToken,function(response){
-        if(!response||response.success!==true){setButton(false,'Coba Lagi');showError(response?.message||'Gagal membuat pembayaran.');return;}
-        const paymentUrl=response?.data?.payment_url;
-        if(!paymentUrl){setButton(false,'Coba Lagi');showError('Payment URL tidak ditemukan.');return;}
-        setStatus('loading',response?.data?.reused===true?'Melanjutkan transaksi DOKU yang sudah dibuat...':'Transaksi siap. Mengarahkan ke DOKU...');
-        window.location.href=paymentUrl;
-      });
-    }
-
-    function jsonpRequest(action,token,callback){
-      const callbackName='ftPayCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-      const script=document.createElement('script');
-      const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server pembayaran tidak merespons. Silakan coba lagi.');setButton(false,'Coba Lagi');},20000);
-      window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};
-      script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);
-      script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Tidak dapat menghubungi server pembayaran.');setButton(false,'Coba Lagi');};
-      document.body.appendChild(script);
-    }
-
+    function showEmpty(){emptyState.style.display='block';payButton.disabled=true;payButton.style.display='none';statusBox.style.display='none';}
+    function loadSecurePayment(){setStatus('loading','Memeriksa payment request...');payButton.disabled=true;payButton.style.display='flex';payButton.firstElementChild.textContent='Memuat pembayaran...';jsonpRequest('getSecurePayment',paymentToken,function(response){if(!response||response.success!==true||!response.data){showError(response?.message||'Payment request tidak dapat dibaca.');return;}currentPayment=response.data;renderPayment(currentPayment);});}
+    function renderPayment(data){referenceNumber.textContent=data.reference_number||'-';customerName.textContent=data.customer_name||'-';description.textContent=data.description||'-';amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');paymentStatus.textContent=data.status||'-';paymentStatus.className='status-pill '+String(data.status||'').toLowerCase();paymentDetail.style.display='block';if(data.status==='PAID'){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Sudah Berhasil';setStatus('success','Pembayaran ini sudah berhasil.');return;}if(data.status==='EXPIRED'){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Kedaluwarsa';showError('Link pembayaran ini sudah kedaluwarsa.');return;}if(data.can_pay!==true){payButton.disabled=true;payButton.firstElementChild.textContent='Pembayaran Tidak Tersedia';showError('Pembayaran belum dapat diproses untuk status ini.');return;}payButton.disabled=false;payButton.firstElementChild.textContent=data.payment_created===true?'Lanjutkan Pembayaran':'Bayar dengan DOKU';setStatus('success','Detail pembayaran berhasil diverifikasi dari backend.');}
+    function createSecurePayment(){payButton.disabled=true;payButton.firstElementChild.textContent='Memproses...';setStatus('loading','Membuat transaksi DOKU...');jsonpRequest('createSecurePayment',paymentToken,function(response){if(!response||response.success!==true){payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';showError(response?.message||'Gagal membuat pembayaran.');return;}const paymentUrl=response?.data?.payment_url;if(!paymentUrl){payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';showError('Payment URL tidak ditemukan.');return;}setStatus('loading',response?.data?.reused===true?'Melanjutkan transaksi DOKU yang sudah dibuat...':'Berhasil. Mengarahkan ke DOKU...');window.location.href=paymentUrl;});}
+    function jsonpRequest(action,token,callback){const callbackName='ftPayCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server pembayaran tidak merespons. Silakan coba lagi.');payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';},20000);window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Tidak dapat menghubungi server pembayaran.');payButton.disabled=false;payButton.firstElementChild.textContent='Coba Lagi';};document.body.appendChild(script);}
     function cleanupJsonp(callbackName,script){if(script&&script.parentNode)script.remove();try{delete window[callbackName];}catch(err){}}
     function formatMoney(amount,currency){const number=Number(amount);if(!Number.isFinite(number))return '-';try{return new Intl.NumberFormat('id-ID',{style:'currency',currency:currency||'IDR',maximumFractionDigits:0}).format(number);}catch(err){return 'Rp'+number.toLocaleString('id-ID');}}
-    function setStatus(type,message){statusBox.className='status-box '+type;statusBox.textContent=message;}
-    function setButton(disabled,label){payButton.disabled=disabled;payButtonLabel.textContent=label;}
-    function showError(message){paymentDetail.style.display=paymentDetail.style.display||'none';setStatus('error',message);}
-    function showEmptyState(){paymentDetail.style.display='none';emptyState.style.display='block';payButton.style.display='none';statusBox.style.display='none';}
-
-    let deferredInstallPrompt=null;
-    window.addEventListener('beforeinstallprompt',function(event){event.preventDefault();deferredInstallPrompt=event;installButton.style.display='inline';});
-    installButton.addEventListener('click',async function(){if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice;}catch(err){}deferredInstallPrompt=null;installButton.style.display='none';});
-    window.addEventListener('appinstalled',function(){installButton.style.display='none';deferredInstallPrompt=null;});
+    function setStatus(type,message){statusBox.className='status-box '+type;statusBox.textContent=message;statusBox.style.display='block';}
+    function showError(message){setStatus('error',message);}
     if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
   </script>
 </body>

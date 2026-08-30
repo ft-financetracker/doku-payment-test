@@ -17,102 +17,84 @@
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <style>
     :root{
-      --navy:#0B132B;--navy-2:#071126;--blue:#1E3A8A;--blue-2:#2E64D7;
-      --green:#B6FF00;--green-soft:#D3FF42;--white:#FFFFFF;--ink:#EAF0FF;
-      --muted:#9AABCE;--muted-2:#7185AE;--line:rgba(125,154,214,.18);
-      --panel:rgba(12,24,55,.88);--panel-2:rgba(17,36,78,.60);--danger:#FF6B78;
-      --warning:#F4B942;--shadow:0 34px 90px rgba(0,0,0,.40);
+      --navy:#0B132B;--blue:#1E3A8A;--blue-2:#2E64D7;--green:#B6FF00;--green-soft:#D3FF42;
+      --ink:#EAF0FF;--muted:#B4C2DE;--muted-2:#8195BE;--line:rgba(125,154,214,.16);--line-2:rgba(125,154,214,.10);
+      --shadow:0 28px 80px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
     html{min-height:100%;background:var(--navy)}
-    body{
-      margin:0;min-height:100vh;min-height:100dvh;padding:28px;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--ink);overflow-x:hidden;
-      background:
-        radial-gradient(1000px 720px at 100% -10%,rgba(30,58,138,.46),transparent 60%),
-        radial-gradient(800px 620px at -10% 110%,rgba(30,58,138,.28),transparent 58%),
-        linear-gradient(145deg,#071126 0%,#0B132B 52%,#08142F 100%);
-    }
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;background:
-      linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.28%,transparent 77.42%),
-      repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.09) 25px 26px);
-      mask-image:linear-gradient(to bottom,transparent 0,#000 20%,#000 100%)}
-    .shell{width:min(100%,1160px);margin:0 auto;position:relative;z-index:1}
-    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 2px 22px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.26)}
-    .brand-copy{min-width:0}.brand-name{font-size:17px;font-weight:900;letter-spacing:-.02em;color:#fff;white-space:nowrap}.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.19em;color:var(--muted);font-weight:800;margin-top:3px}
-    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.34);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
-    .env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
-    .workspace{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);gap:28px;align-items:stretch}
-    .intro{position:relative;min-height:610px;padding:56px 44px 42px;border:1px solid rgba(123,155,220,.13);border-radius:34px;overflow:hidden;background:linear-gradient(145deg,rgba(8,20,47,.54),rgba(7,17,38,.20));box-shadow:0 24px 80px rgba(0,0,0,.18)}
-    .intro:before{content:"";position:absolute;inset:-120px -210px auto auto;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.24),transparent 68%);pointer-events:none}
-    .intro:after{content:"";position:absolute;left:44px;bottom:42px;width:88px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
-    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:10px;font-weight:900;letter-spacing:.20em;text-transform:uppercase;margin-bottom:14px}.eyebrow:before{content:"";width:22px;height:2px;background:var(--green);border-radius:2px}
-    .intro h1{margin:0;max-width:640px;font-size:clamp(42px,5.3vw,68px);line-height:.98;letter-spacing:-.055em;color:#fff}
-    .intro h1 .accent{color:var(--green)}
-    .intro-copy{max-width:600px;margin:20px 0 0;color:#AAB9D8;font-size:15px;line-height:1.75}
-    .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
-    .trust-item{min-height:120px;padding:16px;border:1px solid rgba(125,154,214,.14);border-radius:18px;background:rgba(255,255,255,.025)}
-    .trust-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(182,255,0,.07);border:1px solid rgba(182,255,0,.17);color:var(--green);margin-bottom:12px}.trust-icon svg{width:17px;height:17px}
-    .trust-title{font-size:12px;font-weight:900;color:#EDF3FF}.trust-copy{margin-top:5px;color:#7F93BA;font-size:10px;line-height:1.5}
-    .card{position:relative;overflow:hidden;border:1px solid rgba(123,155,220,.20);border-radius:34px;padding:30px;background:linear-gradient(155deg,rgba(16,31,66,.97),rgba(8,19,43,.95));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
-    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
-    .card:after{content:"";position:absolute;width:250px;height:250px;right:-125px;top:-125px;border-radius:50%;background:radial-gradient(circle,rgba(46,100,215,.22),transparent 70%);pointer-events:none}
-    .card-head{padding-bottom:22px;border-bottom:1px solid var(--line);position:relative;z-index:1}
-    .card-kicker{color:var(--green);font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;margin-bottom:9px}
-    .card h2,.card h1{margin:0;color:#fff;letter-spacing:-.035em}.card h2{font-size:28px;line-height:1.05}.card h1{font-size:30px;line-height:1.05}
-    .card-subtitle{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.65;max-width:430px}
-    .secure-note{display:flex;align-items:center;gap:9px;margin-top:15px;color:#B9C6E2;font-size:10px}.secure-note-icon{width:22px;height:22px;display:grid;place-items:center;border-radius:8px;background:rgba(182,255,0,.08);border:1px solid rgba(182,255,0,.18);color:var(--green)}
-    .detail{display:none;margin-top:20px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
-    .detail-row{display:grid;grid-template-columns:145px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}.detail-row:last-child{border-bottom:0}.detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
-    .detail-label{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}.detail-value{font-size:13px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}.amount-value{font-size:26px;line-height:1;font-weight:950;letter-spacing:-.035em;color:var(--green-soft)}
-    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:9px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+    body{margin:0;min-height:100vh;min-height:100dvh;padding:26px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);overflow-x:hidden;background:radial-gradient(900px 620px at 100% -10%,rgba(30,58,138,.42),transparent 60%),radial-gradient(720px 540px at -10% 110%,rgba(30,58,138,.26),transparent 58%),linear-gradient(145deg,#071126 0%,#0B132B 52%,#08142F 100%)}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.34;background:linear-gradient(126deg,transparent 0 77%,rgba(182,255,0,.88) 77.12% 77.26%,transparent 77.38%),repeating-linear-gradient(135deg,transparent 0 24px,rgba(46,100,215,.08) 25px 26px);mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 100%)}
+    .shell{width:min(100%,1180px);margin:0 auto;position:relative;z-index:1}
+    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:46px;height:46px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}.brand-name{font-size:16px;font-weight:900;letter-spacing:-.02em;color:#fff}.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#97A9D0;font-weight:800;margin-top:3px}
+    .env-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid rgba(244,185,66,.32);background:rgba(244,185,66,.08);color:#FFD98C;font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}.env-dot{width:6px;height:6px;border-radius:50%;background:#F4B942;box-shadow:0 0 12px rgba(244,185,66,.9)}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(430px,.98fr);gap:24px;align-items:stretch}
+    .panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;background:linear-gradient(155deg,rgba(16,31,66,.96),rgba(8,19,43,.92));box-shadow:var(--shadow);backdrop-filter:blur(18px)}
+    .panel:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue-2),transparent)}
+    .intro{padding:42px 34px 30px;min-height:580px}.intro:after{content:"";position:absolute;left:34px;bottom:30px;width:96px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--blue-2))}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--green);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px}.eyebrow:before{content:"";width:18px;height:2px;background:var(--green);border-radius:2px}
+    .intro h1{margin:0;max-width:560px;font-size:clamp(34px,4.8vw,56px);line-height:1.02;letter-spacing:-.045em;color:#fff}.intro h1 .accent{color:var(--green)}
+    .intro-copy{max-width:560px;margin:18px 0 0;color:var(--muted);font-size:15px;line-height:1.72}
+    .timeline{display:grid;gap:14px;margin-top:28px}
+    .timeline-item{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px;border:1px solid var(--line-2);border-radius:18px;background:rgba(255,255,255,.025)}
+    .timeline-dot{width:34px;height:34px;display:grid;place-items:center;border-radius:12px;background:rgba(46,100,215,.12);border:1px solid rgba(46,100,215,.18);color:#A8C2FF;font-size:11px;font-weight:900}
+    .timeline-title{font-size:13px;font-weight:900;color:#EDF3FF}.timeline-copy{margin-top:4px;color:#96A8CC;font-size:11px;line-height:1.6}
+    .result-card{padding:24px}
+    .card-head{padding:4px 4px 18px;border-bottom:1px solid var(--line)}
+    .result-head{display:flex;align-items:flex-start;gap:14px}
+    .result-icon{width:62px;height:62px;display:grid;place-items:center;border-radius:18px;flex:0 0 62px;border:1px solid rgba(125,154,214,.18);background:rgba(255,255,255,.03);color:#9CC1FF;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+    .result-icon svg{width:30px;height:30px}
+    .result-icon.success{color:var(--green);background:rgba(182,255,0,.08);border-color:rgba(182,255,0,.18)}
+    .result-icon.failed{color:#FF8E98;background:rgba(255,107,120,.08);border-color:rgba(255,107,120,.18)}
+    .card-kicker{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+    .card-title{margin:0;color:#fff;font-size:20px;line-height:1.1;letter-spacing:-.03em}
+    .card-subtitle{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.68;max-width:420px}
+    .detail{display:none;margin-top:18px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}
+    .detail-row{display:grid;grid-template-columns:135px 1fr;gap:18px;align-items:start;padding:14px 15px;border-bottom:1px solid var(--line)}.detail-row:last-child{border-bottom:0}.detail-row.amount-row{background:linear-gradient(90deg,rgba(182,255,0,.055),rgba(30,58,138,.06))}
+    .detail-label{font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);padding-top:2px}.detail-value{font-size:14px;font-weight:750;color:#EAF0FF;text-align:right;word-break:break-word}.amount-value{font-size:22px;line-height:1.05;font-weight:950;letter-spacing:-.03em;color:var(--green-soft)}
+    .status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid rgba(137,158,204,.20);background:rgba(137,158,204,.08);color:#C9D4EB;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
     .status-pill.open,.status-pill.payment_created,.status-pill.processing{color:#8DB6FF;border-color:rgba(75,130,240,.25);background:rgba(40,93,190,.10)}.status-pill.paid{color:var(--green);border-color:rgba(182,255,0,.25);background:rgba(182,255,0,.08)}.status-pill.expired,.status-pill.cancelled{color:#FF8E98;border-color:rgba(255,107,120,.25);background:rgba(255,107,120,.08)}
-    .empty{display:none;margin-top:20px;padding:28px 20px;border-radius:20px;border:1px dashed rgba(137,158,204,.28);background:rgba(255,255,255,.02);text-align:center}.empty-icon{width:50px;height:50px;margin:0 auto 12px;display:grid;place-items:center;border-radius:16px;background:rgba(46,100,215,.09);border:1px solid rgba(46,100,215,.18);color:#8FB4FF}.empty-title{font-size:14px;font-weight:900;color:#ECF2FF}.empty-copy{max-width:340px;margin:6px auto 0;font-size:11px;line-height:1.6;color:#8396BD}
-    .cta{width:100%;margin-top:17px;min-height:54px;border:0;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;font-size:14px;font-weight:950;letter-spacing:-.01em;cursor:pointer;box-shadow:0 13px 30px rgba(182,255,0,.15);transition:transform .15s ease,filter .15s ease,opacity .15s ease}.cta:hover{transform:translateY(-1px);filter:brightness(1.04)}.cta:active{transform:translateY(0)}.cta:disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55);box-shadow:none;transform:none}.cta svg{width:17px;height:17px}
-    .secondary-btn{width:100%;margin-top:10px;min-height:48px;border:1px solid var(--line);border-radius:15px;padding:12px 16px;background:rgba(255,255,255,.025);color:#DCE6FA;font-size:13px;font-weight:850;cursor:pointer}
-    .status-box{display:none;margin-top:12px;padding:12px 13px;border-radius:14px;font-size:11px;line-height:1.55;border:1px solid transparent}.status-box.loading{display:block;color:#AFC7F8;background:rgba(46,100,215,.08);border-color:rgba(46,100,215,.18)}.status-box.success{display:block;color:#D8FFA4;background:rgba(182,255,0,.055);border-color:rgba(182,255,0,.15)}.status-box.error{display:block;color:#FFB1B8;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.16)}
-    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:9px}.footer strong{color:#95A8CF;font-weight:850}.install-btn{display:none;border:0;background:none;color:#AFC4ED;font:inherit;font-weight:850;cursor:pointer;padding:0}
-    .result-icon{width:78px;height:78px;margin-bottom:20px;display:grid;place-items:center;border-radius:24px;border:1px solid rgba(46,100,215,.18);background:rgba(46,100,215,.07);color:#8FB4FF;box-shadow:0 14px 36px rgba(0,0,0,.20)}.result-icon svg{width:36px;height:36px}.result-icon.success{color:var(--green);background:rgba(182,255,0,.07);border-color:rgba(182,255,0,.2)}.result-icon.failed{color:#FF8E98;background:rgba(255,107,120,.07);border-color:rgba(255,107,120,.18)}
-    @media(max-width:900px){body{padding:20px}.shell{width:min(100%,600px)}.workspace{grid-template-columns:1fr;gap:16px}.intro{min-height:auto;padding:28px 26px 30px}.intro h1{font-size:clamp(34px,8vw,48px)}.intro-copy{font-size:13px;margin-top:14px}.trust-grid{margin-top:22px}.card{padding:26px}.intro:after{display:none}}
-    @media(max-width:560px){body{padding:15px}.brandbar{margin-bottom:14px}.brand-mark{width:42px;height:42px;flex-basis:42px}.brand-name{font-size:15px}.brand-sub{display:none}.intro{padding:22px 20px;border-radius:26px}.intro h1{font-size:34px}.intro-copy{font-size:12px}.trust-grid{grid-template-columns:1fr;gap:8px}.trust-item{min-height:0;padding:12px 13px;display:grid;grid-template-columns:30px 1fr;column-gap:10px;align-items:center}.trust-icon{width:30px;height:30px;margin:0;grid-row:1/3}.trust-title{font-size:11px}.trust-copy{margin:1px 0 0}.card{padding:21px;border-radius:26px}.card h2,.card h1{font-size:25px}.detail-row{grid-template-columns:1fr;gap:5px}.detail-value{text-align:left}.amount-value{font-size:24px}.footer{flex-wrap:wrap;justify-content:center}.env-badge{padding:7px 9px}.result-icon{width:68px;height:68px;border-radius:21px}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}}
-
-    .result-card .card-head{text-align:left}
-    .result-card .result-icon{margin-top:20px}
-    .timeline{display:grid;gap:12px;margin-top:32px;max-width:540px}
-    .timeline-item{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
-    .timeline-dot{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(46,100,215,.08);border:1px solid rgba(46,100,215,.16);color:#8FB4FF;font-size:11px;font-weight:900}
-    .timeline-title{font-size:12px;font-weight:900;color:#EEF4FF;margin-top:1px}.timeline-copy{margin-top:4px;color:#7F93BA;font-size:10px;line-height:1.5}
-    .button-link{text-decoration:none}
+    .button-link,.secondary-btn{width:100%;min-height:52px;border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:900;text-decoration:none}.button-link{margin-top:16px;border:0;background:linear-gradient(135deg,#B6FF00,#9FEA00);color:#071126;box-shadow:0 13px 30px rgba(182,255,0,.15)}.button-link svg{width:17px;height:17px}.secondary-btn{margin-top:10px;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#DCE6FA;cursor:pointer}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:0 4px;color:#65789F;font-size:10px}.footer strong{color:#95A8CF;font-weight:850}
+    @media (max-width: 980px){.workspace{grid-template-columns:1fr}.intro{min-height:auto}}
+    @media (max-width: 720px){body{padding:18px}.brandbar{margin-bottom:18px}.brand-mark{width:42px;height:42px}.brand-name{font-size:15px}.intro,.result-card{padding:22px}.result-head{align-items:center}.result-icon{width:54px;height:54px;flex-basis:54px}.result-icon svg{width:26px;height:26px}.intro h1{font-size:clamp(30px,10vw,46px)}.intro-copy,.card-subtitle{font-size:14px}.detail-row{grid-template-columns:1fr;gap:8px}.detail-value{text-align:left}.amount-value{font-size:20px}.footer{flex-direction:column;align-items:flex-start}}
   </style>
 </head>
 <body>
   <main class="shell">
     <header class="brandbar">
-      <div class="brand"><img class="brand-mark" src="./icons/icon-192.png" alt="FT Pay"><div class="brand-copy"><div class="brand-name">Finance Tracker Pay</div><div class="brand-sub">Payment Status</div></div></div>
-      <div class="env-badge"><span class="env-dot"></span>Sandbox</div>
+      <div class="brand">
+        <img class="brand-mark" src="./assets/ft-pay-mark.svg" alt="FT Pay">
+        <div>
+          <div class="brand-name">Finance Tracker Pay</div>
+          <div class="brand-sub">Payment Status</div>
+        </div>
+      </div>
+      <div class="env-badge"><span class="env-dot"></span> Sandbox</div>
     </header>
 
     <div class="workspace">
-      <section class="intro" aria-labelledby="statusIntroTitle">
+      <section class="panel intro" aria-labelledby="statusIntroTitle">
         <div class="eyebrow">Automatic Reconciliation</div>
         <h1 id="statusIntroTitle">Status jelas.<br><span class="accent">Tercatat otomatis.</span></h1>
-        <p class="intro-copy">Halaman ini membaca status lokal Finance Tracker. Reconciliation engine yang memeriksa DOKU dan memperbarui PAYMENT_LOG, PAYMENT_REQUEST, serta audit trail.</p>
+        <p class="intro-copy">Halaman ini membaca status lokal Finance Tracker. Reconciliation engine memeriksa DOKU dan memperbarui PAYMENT_LOG, PAYMENT_REQUEST, serta audit trail secara otomatis.</p>
         <div class="timeline">
-          <div class="timeline-item"><div class="timeline-dot">01</div><div><div class="timeline-title">Payment dibuat</div><div class="timeline-copy">Tagihan aman dibuat dari PAYMENT_REQUEST dengan nominal backend.</div></div></div>
-          <div class="timeline-item"><div class="timeline-dot">02</div><div><div class="timeline-title">Reconciliation berjalan</div><div class="timeline-copy">Status DOKU diperiksa otomatis tanpa mengandalkan browser customer.</div></div></div>
-          <div class="timeline-item"><div class="timeline-dot">03</div><div><div class="timeline-title">Status final</div><div class="timeline-copy">PAID atau EXPIRED disinkronkan ke request dan dicatat di status history.</div></div></div>
+          <div class="timeline-item"><div class="timeline-dot">01</div><div><div class="timeline-title">Payment dibuat</div><div class="timeline-copy">Tagihan dibuat dari PAYMENT_REQUEST dengan nominal backend yang aman.</div></div></div>
+          <div class="timeline-item"><div class="timeline-dot">02</div><div><div class="timeline-title">Reconciliation berjalan</div><div class="timeline-copy">Status DOKU diperiksa otomatis tanpa bergantung pada browser customer.</div></div></div>
+          <div class="timeline-item"><div class="timeline-dot">03</div><div><div class="timeline-title">Status final</div><div class="timeline-copy">PAID atau EXPIRED disinkronkan ke request dan dicatat pada status history.</div></div></div>
         </div>
       </section>
 
-      <section class="card result-card" aria-labelledby="title">
+      <section class="panel result-card" aria-labelledby="title">
         <div class="card-head">
-          <div id="statusIcon" class="result-icon pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-          <div class="card-kicker">Payment Status</div>
-          <h1 id="title">Memeriksa Pembayaran</h1>
-          <p id="descriptionText" class="card-subtitle">Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.</p>
+          <div class="result-head">
+            <div id="statusIcon" class="result-icon pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div class="result-copy">
+              <div class="card-kicker">Payment Status</div>
+              <h2 id="title" class="card-title">Memeriksa Pembayaran</h2>
+              <p id="descriptionText" class="card-subtitle">Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.</p>
+            </div>
+          </div>
         </div>
 
         <div id="detailBox" class="detail">
@@ -122,7 +104,7 @@
           <div class="detail-row"><span class="detail-label">Status</span><span id="paymentStatus" class="status-pill">Memeriksa</span></div>
         </div>
 
-        <a id="backButton" class="cta button-link" href="./"><span>Kembali ke Pembayaran</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a>
+        <a id="backButton" class="button-link" href="./"><span>Kembali ke Pembayaran</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a>
         <button id="retryButton" class="secondary-btn" type="button" style="display:none">Periksa Status Lagi</button>
       </section>
     </div>
@@ -158,43 +140,12 @@ const API_URL='https://script.google.com/macros/s/AKfycbznn7Acyvb23wN8IBgG95UGuv
     if(!paymentToken||!/^[a-f0-9]{128}$/i.test(paymentToken)){showError('Link Pembayaran Tidak Valid','Status pembayaran tidak dapat dibuka dari link ini.');}
     else{backButton.href='./#token='+encodeURIComponent(paymentToken);checkStatus();}
 
-    function checkStatus(){
-      clearAutoCheckTimer();setChecking();
-      jsonpRequest('getSecurePayment',paymentToken,function(response){
-        if(!response||response.success!==true||!response.data){showError('Gagal Memeriksa Pembayaran',response?.message||'Status pembayaran belum dapat diperiksa.');return;}
-        renderDetail(response.data);renderStatus(String(response.data.status||'UNKNOWN').toUpperCase());
-      });
-    }
-
-    function renderDetail(data){
-      referenceNumber.textContent=data.reference_number||'-';customerName.textContent=data.customer_name||'-';amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');
-      const status=String(data.status||'-').toUpperCase();paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();detailBox.style.display='block';
-    }
-
-    function setIcon(type){
-      statusIcon.className='result-icon '+type;
-      if(type==='success')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.6 2.6L16.5 9"/></svg>';
-      else if(type==='failed')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg>';
-      else statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
-    }
-
-    function renderStatus(status){
-      paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();
-      if(status==='PAID'){clearAutoCheckTimer();checkAttempt=0;setIcon('success');title.textContent='Pembayaran Berhasil';descriptionText.textContent='Pembayaran telah dikonfirmasi dan tercatat di Finance Tracker.';retryButton.style.display='none';return;}
-      if(status==='EXPIRED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Kedaluwarsa';descriptionText.textContent='Masa pembayaran telah berakhir. Gunakan tautan pembayaran baru.';retryButton.style.display='none';return;}
-      if(status==='CANCELLED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Dibatalkan';descriptionText.textContent='Payment request ini sudah tidak aktif.';retryButton.style.display='none';return;}
-      if(status==='OPEN'||status==='PAYMENT_CREATED'||status==='PROCESSING'){
-        setIcon('pending');title.textContent='Menunggu Konfirmasi';paymentStatus.textContent='PENDING';paymentStatus.className='status-pill processing';checkAttempt++;
-        if(checkAttempt<MAX_CHECK_ATTEMPTS){descriptionText.textContent='Pembayaran sedang diproses. Status akan diperiksa kembali secara otomatis.';retryButton.style.display='none';autoCheckTimer=setTimeout(checkStatus,CHECK_INTERVAL);}
-        else{descriptionText.textContent='Pembayaran belum terkonfirmasi. Silakan periksa kembali beberapa saat lagi.';retryButton.style.display='block';}
-        return;
-      }
-      clearAutoCheckTimer();setIcon('pending');title.textContent='Status Pembayaran';descriptionText.textContent='Status transaksi belum final.';retryButton.style.display='block';
-    }
-
+    function checkStatus(){clearAutoCheckTimer();setChecking();jsonpRequest('getSecurePayment',paymentToken,function(response){if(!response||response.success!==true||!response.data){showError('Gagal Memeriksa Pembayaran',response?.message||'Status pembayaran belum dapat diperiksa.');return;}renderDetail(response.data);renderStatus(String(response.data.status||'UNKNOWN').toUpperCase());});}
+    function renderDetail(data){referenceNumber.textContent=data.reference_number||'-';customerName.textContent=data.customer_name||'-';amountBox.textContent=formatMoney(data.amount,data.currency||'IDR');const status=String(data.status||'-').toUpperCase();paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();detailBox.style.display='block';}
+    function setIcon(type){statusIcon.className='result-icon '+type;if(type==='success')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.6 2.6L16.5 9"/></svg>';else if(type==='failed')statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg>';else statusIcon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';}
+    function renderStatus(status){paymentStatus.textContent=status;paymentStatus.className='status-pill '+status.toLowerCase();if(status==='PAID'){clearAutoCheckTimer();checkAttempt=0;setIcon('success');title.textContent='Pembayaran Berhasil';descriptionText.textContent='Pembayaran telah dikonfirmasi dan tercatat di Finance Tracker.';retryButton.style.display='none';return;}if(status==='EXPIRED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Kedaluwarsa';descriptionText.textContent='Masa pembayaran telah berakhir. Gunakan tautan pembayaran baru.';retryButton.style.display='none';return;}if(status==='CANCELLED'){clearAutoCheckTimer();setIcon('failed');title.textContent='Pembayaran Dibatalkan';descriptionText.textContent='Payment request ini sudah tidak aktif.';retryButton.style.display='none';return;}if(status==='OPEN'||status==='PAYMENT_CREATED'||status==='PROCESSING'){setIcon('pending');title.textContent='Menunggu Konfirmasi';paymentStatus.textContent='PENDING';paymentStatus.className='status-pill processing';checkAttempt++;if(checkAttempt<MAX_CHECK_ATTEMPTS){descriptionText.textContent='Pembayaran sedang diproses. Status akan diperiksa kembali secara otomatis.';retryButton.style.display='none';autoCheckTimer=setTimeout(checkStatus,CHECK_INTERVAL);}else{descriptionText.textContent='Pembayaran belum terkonfirmasi. Silakan periksa kembali beberapa saat lagi.';retryButton.style.display='block';}return;}clearAutoCheckTimer();setIcon('pending');title.textContent='Status Pembayaran';descriptionText.textContent='Status transaksi belum final.';retryButton.style.display='block';}
     function setChecking(){setIcon('pending');title.textContent='Memeriksa Pembayaran';descriptionText.textContent='Mohon tunggu. Status pembayaran sedang diperiksa dari sistem.';paymentStatus.textContent='Memeriksa';paymentStatus.className='status-pill processing';retryButton.style.display='none';}
     function showError(heading,message){clearAutoCheckTimer();setIcon('failed');title.textContent=heading;descriptionText.textContent=message;paymentStatus.textContent='ERROR';paymentStatus.className='status-pill expired';retryButton.style.display='block';}
-
     function jsonpRequest(action,token,callback){const callbackName='ftPayResultCallback_'+Date.now()+'_'+Math.random().toString(36).slice(2);const script=document.createElement('script');const timeout=setTimeout(function(){cleanupJsonp(callbackName,script);showError('Server Tidak Merespons','Status pembayaran belum dapat diperiksa.');},20000);window[callbackName]=function(response){clearTimeout(timeout);cleanupJsonp(callbackName,script);callback(response);};script.src=API_URL+'?action='+encodeURIComponent(action)+'&token='+encodeURIComponent(token)+'&callback='+encodeURIComponent(callbackName);script.onerror=function(){clearTimeout(timeout);cleanupJsonp(callbackName,script);showError('Server Tidak Terhubung','Tidak dapat menghubungi server pembayaran.');};document.body.appendChild(script);}
     function cleanupJsonp(callbackName,script){if(script&&script.parentNode)script.remove();try{delete window[callbackName];}catch(err){}}
     function clearAutoCheckTimer(){if(autoCheckTimer){clearTimeout(autoCheckTimer);autoCheckTimer=null;}}
